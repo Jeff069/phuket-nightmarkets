@@ -1,0 +1,149 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Phuket Night Markets – unsere Favoriten</title>
+<style>
+:root{
+  --bg:#fff9f5;--text:#332a2d;--muted:#745f65;--card:#ffffff;--border:#efded9;
+  --rose:#e86f81;--rose-soft:#fff0f2;--dark:#3d2930;
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:ui-rounded,"SF Pro Rounded","Avenir Next",system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:var(--text)}
+.app{max-width:1180px;margin:auto;padding:28px}
+.hero{position:relative;overflow:hidden;border-radius:30px;padding:34px;background:linear-gradient(135deg,#f8b7ac 0%,#ffd8b5 42%,#fff0cf 100%);color:#3d2930}
+.hero:after{content:"🌺";position:absolute;right:20px;top:14px;font-size:78px;opacity:.26;transform:rotate(12deg)}
+.eyebrow{font-size:12px;font-weight:800;letter-spacing:.14em;text-transform:uppercase;color:#8e4f5c;margin-bottom:8px}
+.hero h1{font-size:clamp(30px,6vw,56px);line-height:1.02;margin:0 0 12px;max-width:780px}
+.hero p{font-size:17px;line-height:1.55;margin:0;max-width:760px}
+.chips{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.chip{display:inline-flex;align-items:center;gap:7px;padding:9px 13px;border-radius:999px;background:rgba(255,255,255,.6);font-weight:700;font-size:13px}
+.section{margin-top:28px}
+.section-title{display:flex;align-items:flex-end;justify-content:space-between;gap:14px;margin-bottom:14px}
+.section-title h2{margin:0;font-size:24px;line-height:1.15}
+.section-title p{margin:0;color:var(--muted);font-size:13px}
+.top-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:14px}
+.pick{position:relative;border-radius:24px;padding:20px;min-height:190px;background:#fff;border:1px solid var(--border);box-shadow:0 10px 30px rgba(112,67,76,.08)}
+.pick.gold{background:linear-gradient(160deg,#fff3c6,#ffe2b8)}
+.pick.rose{background:linear-gradient(160deg,#ffe2e5,#ffd2c9)}
+.pick.mint{background:linear-gradient(160deg,#e5f7ed,#d8f1e8)}
+.pick.blue{background:linear-gradient(160deg,#e1f1fb,#d9edf4)}
+.rank{font-size:13px;font-weight:900;color:#7e5963;text-transform:uppercase;letter-spacing:.08em}
+.pick h3{margin:8px 0 7px;font-size:19px;color:#3d2930}.pick p{margin:0;color:#5f4b50;font-size:14px;line-height:1.45}
+.score{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.badge{padding:7px 10px;border-radius:999px;background:rgba(255,255,255,.72);font-size:12px;font-weight:800;color:#4d3b40}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:4px 0 16px}
+.toolbar button{appearance:none;border:1px solid #e8d5cf;background:#fff;color:inherit;padding:11px 15px;border-radius:999px;font-size:14px;font-weight:800;cursor:pointer;min-height:44px}
+.toolbar button.active{background:var(--rose);color:white;border-color:var(--rose)}
+.toolbar button:focus-visible{outline:3px solid #f7b6c1;outline-offset:2px}
+.day-panel{border-radius:26px;background:#fff;border:1px solid var(--border);overflow:hidden}
+.day-head{padding:18px 20px;background:linear-gradient(90deg,#f9c9c2,#ffe7c7);color:#3d2930;display:flex;justify-content:space-between;gap:12px;align-items:center}
+.day-head h3{margin:0;font-size:21px}
+.day-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr))}
+.market{padding:17px 19px;border-top:1px solid #f2e6e2;min-width:0}
+.market:nth-child(odd){border-right:1px solid #f2e6e2}
+.market-top{display:flex;justify-content:space-between;gap:12px;align-items:flex-start}
+.market h4{margin:0 0 4px;font-size:16px}
+.area{font-size:12px;color:#886f76}
+.time{font-size:12px;font-weight:800;white-space:nowrap;background:#fff4ee;padding:6px 9px;border-radius:10px}
+.reason{margin:10px 0 0;font-size:13px;line-height:1.45;color:#5f5054}
+.mini{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.mini span{font-size:11px;font-weight:800;padding:6px 8px;border-radius:999px;background:#fff5f0}
+.compare{overflow-x:auto;border-radius:24px;border:1px solid var(--border);background:#fff}
+table{border-collapse:collapse;width:100%;min-width:880px}
+th,td{text-align:left;padding:14px 13px;border-bottom:1px solid #f2e6e2;vertical-align:top}
+th{font-size:12px;text-transform:uppercase;letter-spacing:.06em;background:#fff3ef}
+td{font-size:13px}
+.good{color:#27724c;font-weight:800}.bad{color:#a2505c}
+.footer-note{margin-top:20px;padding:18px;border-radius:20px;background:var(--rose-soft);font-size:13px;line-height:1.55;color:#6f555d}
+.actions{display:flex;justify-content:flex-end;margin-top:18px}
+.print-btn{border:0;background:var(--rose);color:white;font-weight:900;padding:12px 18px;border-radius:999px;cursor:pointer;min-height:44px}
+@media(max-width:900px){.top-grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:640px){
+  .app{padding:16px}.hero{padding:25px 20px;border-radius:24px}.hero:after{font-size:54px}
+  .top-grid{grid-template-columns:1fr}.day-list{grid-template-columns:1fr}.market:nth-child(odd){border-right:0}
+  .section-title{align-items:flex-start;flex-direction:column}.market-top{flex-direction:column}.time{white-space:normal}
+}
+@media print{
+  body{background:white}.app{padding:0}.toolbar,.actions{display:none!important}.pick{box-shadow:none}
+}
+</style>
+</head>
+<body>
+<div class="app" id="phuket-nightmarkets">
+  <section class="hero">
+    <div class="eyebrow">Unser Phuket-Abendguide · Montag bis Sonntag</div>
+    <h1>Night Markets, die wir wirklich erleben wollen ✨</h1>
+    <p>Eine schöne Übersicht für uns zwei – mit Fokus auf <strong>frischen Fisch, Seafood, tropisches Obst</strong> und Märkte, bei denen sich der Abend auch wirklich lohnt.</p>
+    <div class="chips"><span class="chip">🐟 Seafood zuerst</span><span class="chip">🥭 Viel tropisches Obst</span><span class="chip">🌴 Urlaubsgefühl</span><span class="chip">💗 Paar-tauglich</span></div>
+  </section>
+
+  <section class="section">
+    <div class="section-title"><div><h2>Unsere vier Favoriten</h2><p>Wenn wir nicht lange überlegen wollen.</p></div></div>
+    <div class="top-grid">
+      <article class="pick gold"><div class="rank">🥇 Unser Wochenend-Favorit</div><h3>Naka Weekend Market</h3><p>Riesig, bunt, lebendig – sehr viel Seafood, Obst, Streetfood und Shopping.</p><div class="score"><span class="badge">🐟 5/5</span><span class="badge">🥭 5/5</span><span class="badge">✨ Sa + So</span></div></article>
+      <article class="pick rose"><div class="rank">💗 Einfach & lecker</div><h3>Malin Plaza</h3><p>Jeden Tag geöffnet. Seafood, Obst, Tische und ein unkomplizierter Abend in Patong.</p><div class="score"><span class="badge">🐟 5/5</span><span class="badge">🥭 5/5</span><span class="badge">🌙 täglich</span></div></article>
+      <article class="pick mint"><div class="rank">🦐 Für frischen Fisch</div><h3>Banzaan Fresh Market</h3><p>Fisch, Garnelen und Krabben aussuchen – plus tropisches Obst. Sehr stark, wenn Essen im Mittelpunkt steht.</p><div class="score"><span class="badge">🐟 5/5</span><span class="badge">🥭 5/5</span><span class="badge">🍽️ frisch</span></div></article>
+      <article class="pick blue"><div class="rank">🌺 Schön & besonders</div><h3>Lard Yai</h3><p>Sonntag in Old Phuket Town. Wunderschöne Kulisse, Streetfood, Musik und echtes Phuket-Abendgefühl.</p><div class="score"><span class="badge">🐟 4/5</span><span class="badge">🥭 3/5</span><span class="badge">📸 5/5</span></div></article>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-title"><div><h2>Was passt heute?</h2><p>Einfach den Wochentag antippen.</p></div></div>
+    <div class="toolbar" role="group" aria-label="Wochentag auswählen">
+      <button type="button" data-day="Mo">Mo</button><button type="button" data-day="Di">Di</button><button type="button" data-day="Mi">Mi</button><button type="button" data-day="Do">Do</button><button type="button" data-day="Fr">Fr</button><button type="button" data-day="Sa">Sa</button><button type="button" data-day="So">So</button>
+    </div>
+    <div id="dayOutput" aria-live="polite"></div>
+  </section>
+
+  <section class="section">
+    <div class="section-title"><div><h2>Die wichtigsten Märkte im Vergleich</h2><p>Gut = stark für euren Wunsch. Weniger gut = was man vorher wissen sollte.</p></div></div>
+    <div class="compare">
+      <table>
+        <thead><tr><th>Markt</th><th>Tage</th><th>Fisch</th><th>Obst</th><th>Atmosphäre</th><th>Warum gut</th><th>Weniger gut</th></tr></thead>
+        <tbody>
+          <tr><td><strong>Naka Weekend Market</strong><br>Phuket Town</td><td>Sa + So<br>16–22 Uhr</td><td>🐟🐟🐟🐟🐟</td><td>🥭🥭🥭🥭🥭</td><td>💗💗💗💗💗</td><td class="good">Größte Auswahl, sehr viel Essen & Shopping.</td><td class="bad">Sehr voll und heiß.</td></tr>
+          <tr><td><strong>Chillva Market</strong><br>Phuket Town</td><td>Mo–Sa<br>17–23 Uhr</td><td>🐟🐟🐟🐟</td><td>🥭🥭🥭🥭</td><td>💗💗💗💗💗</td><td class="good">Jung, lebendig, Musik, tolles Allround-Erlebnis.</td><td class="bad">Nicht ganz so viel Frischware wie Naka/Banzaan.</td></tr>
+          <tr><td><strong>Malin Plaza</strong><br>Patong</td><td>täglich<br>bis ca. 23 Uhr</td><td>🐟🐟🐟🐟🐟</td><td>🥭🥭🥭🥭🥭</td><td>💗💗💗💗</td><td class="good">Sehr bequem, viel Seafood & Obst, Sitzplätze.</td><td class="bad">Deutlich touristischer.</td></tr>
+          <tr><td><strong>Banzaan Fresh Market</strong><br>Patong</td><td>täglich</td><td>🐟🐟🐟🐟🐟</td><td>🥭🥭🥭🥭🥭</td><td>💗💗💗</td><td class="good">Top für frischen Fisch, Krabben, Garnelen und Obst.</td><td class="bad">Mehr Frischemarkt als romantischer Night Market.</td></tr>
+          <tr><td><strong>Kata Night Market</strong><br>Kata</td><td>täglich<br>12–23 Uhr</td><td>🐟🐟🐟🐟🐟</td><td>🥭🥭🥭🥭🥭</td><td>💗💗💗💗</td><td class="good">Überdacht, Seafood, Obst, Desserts und Sitzplätze.</td><td class="bad">Touristisch, abends teilweise eng.</td></tr>
+          <tr><td><strong>Karon Temple Market</strong><br>Karon</td><td>Di + Fr<br>ca. 16–22 Uhr</td><td>🐟🐟</td><td>🥭🥭🥭🥭</td><td>💗💗💗💗</td><td class="good">Schönes Tempel-Setting, Obst, Snacks und Shopping.</td><td class="bad">Weniger Seafood.</td></tr>
+          <tr><td><strong>Lard Yai</strong><br>Old Phuket Town</td><td>So<br>ca. 16–22 Uhr</td><td>🐟🐟🐟🐟</td><td>🥭🥭🥭</td><td>💗💗💗💗💗</td><td class="good">Schönster Markt für Atmosphäre, Fotos und Altstadt.</td><td class="bad">Sonntag sehr voll.</td></tr>
+          <tr><td><strong>Rawai Seafood Market</strong><br>Rawai Pier</td><td>täglich<br>bis ca. 21 Uhr</td><td>🐟🐟🐟🐟🐟</td><td>🥭🥭</td><td>💗💗💗💗</td><td class="good">Wenn Fisch Priorität Nr. 1 ist.</td><td class="bad">Obst ist Nebensache; kein klassischer Night Market.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <div class="footer-note"><strong>Unser kleiner Entscheidungshelfer:</strong> Samstag → <strong>Naka</strong>. Sonntag → <strong>Lard Yai</strong> für Schönheit oder <strong>Naka</strong> für maximale Auswahl. Unter der Woche → <strong>Chillva</strong>. Wenn wir einfach nur richtig gutes Seafood + Obst wollen → <strong>Banzaan, Malin oder Kata</strong>. 🥭🦐🌴</div>
+  <div class="actions"><button class="print-btn" id="printGuide" type="button">♡ Drucken / als PDF speichern</button></div>
+</div>
+
+<script>
+const data={
+  Mo:[['Chillva Market','Phuket Town','17–23 Uhr','🐟 4/5','🥭 4/5','Die beste Mischung aus Essen, Musik und Atmosphäre unter der Woche.'],['Malin Plaza','Patong','bis ca. 23 Uhr','🐟 5/5','🥭 5/5','Sehr einfach für Seafood + Obst, dazu Sitzplätze.'],['Banzaan Fresh Market','Patong','bis spät','🐟 5/5','🥭 5/5','Perfekt, wenn wir frischen Fisch und Obst aussuchen möchten.'],['Rawai Moving Market','Rawai','meist 16–21 Uhr','🐟 4/5','🥭 5/5','Lokaler und weniger touristisch – stark für Frischeware.']],
+  Di:[['Karon Temple Market','Karon','ca. 16–22 Uhr','🐟 2/5','🥭 4/5','Schönes Tempelgefühl, Obst und Snacks.'],['Chillva Market','Phuket Town','17–23 Uhr','🐟 4/5','🥭 4/5','Lebendig, jung und vielseitig.'],['Kata Night Market','Kata','bis 23 Uhr','🐟 5/5','🥭 5/5','Sehr bequem für Seafood, Obst und Desserts.']],
+  Mi:[['Chillva Market','Phuket Town','17–23 Uhr','🐟 4/5','🥭 4/5','Unser stärkster Allrounder am Mittwoch.'],['Phuket Indy Market','Phuket Town','16–22 Uhr','🐟 2/5','🥭 2/5','Klein, kreativ und angenehm für einen entspannten Abend.'],['Banzaan Fresh Market','Patong','bis spät','🐟 5/5','🥭 5/5','Die beste Food-Wahl, wenn Frische wichtiger als Show ist.']],
+  Do:[['Chillva Market','Phuket Town','17–23 Uhr','🐟 4/5','🥭 4/5','Sehr gute Atmosphäre mit vielen Essensständen.'],['Rawai Moving Market','Rawai','meist 16–21 Uhr','🐟 4/5','🥭 5/5','Lokale Frischeware und viel Obst.'],['Bang Tao Night Market','Bang Tao','ca. 14–20 Uhr','🐟 3/5','🥭 4/5','Gut, wenn wir sowieso in Bang Tao sind.']],
+  Fr:[['Karon Temple Market','Karon','ca. 16–22 Uhr','🐟 2/5','🥭 4/5','Schöne Kulisse und gutes Stöbern.'],['Chillva Market','Phuket Town','17–23 Uhr','🐟 4/5','🥭 4/5','Lebendig und ideal als Freitagabend-Markt.'],['Fun Friday Avenue','Bang Tao','ca. 16–22:30 Uhr','🐟 3/5','🥭 3/5','Gepflegter, schöner Abend mit Essen und Shopping.']],
+  Sa:[['Naka Weekend Market','Phuket Town','16–22 Uhr','🐟 5/5','🥭 5/5','Ganz klar unser Samstagssieger – riesig und voller Auswahl.'],['Chillva Market','Phuket Town','17–23 Uhr','🐟 4/5','🥭 4/5','Etwas kompakter und moderner als Naka.'],['Kata Night Market','Kata','bis 23 Uhr','🐟 5/5','🥭 5/5','Bequem, überdacht und stark für Essen.']],
+  So:[['Lard Yai','Old Phuket Town','ca. 16–22 Uhr','🐟 4/5','🥭 3/5','Der schönste Sonntagabend – Altstadt, Musik und Atmosphäre.'],['Naka Weekend Market','Phuket Town','16–22 Uhr','🐟 5/5','🥭 5/5','Wenn maximale Auswahl wichtiger ist als Kulisse.'],['Rawai Moving Market','Rawai','meist 16–21 Uhr','🐟 4/5','🥭 5/5','Für frische lokale Ware und viel Obst.']]
+};
+
+const root=document.getElementById('phuket-nightmarkets');
+const out=document.getElementById('dayOutput');
+const buttons=[...document.querySelectorAll('[data-day]')];
+
+function render(day){
+  buttons.forEach(b=>b.classList.toggle('active',b.dataset.day===day));
+  const items=data[day]||[];
+  out.innerHTML=`<div class="day-panel"><div class="day-head"><h3>${day} · unsere besten Optionen</h3><span>🌴 Phuket Abend</span></div><div class="day-list">${items.map(m=>`<article class="market"><div class="market-top"><div><h4>${m[0]}</h4><div class="area">${m[1]}</div></div><div class="time">${m[2]}</div></div><p class="reason">${m[5]}</p><div class="mini"><span>${m[3]}</span><span>${m[4]}</span></div></article>`).join('')}</div></div>`;
+}
+buttons.forEach(b=>b.addEventListener('click',()=>render(b.dataset.day)));
+document.getElementById('printGuide').addEventListener('click',()=>window.print());
+const today=['So','Mo','Di','Mi','Do','Fr','Sa'][new Date().getDay()];
+render(data[today]?today:'Mo');
+</script>
+</body>
+</html>
