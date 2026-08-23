@@ -1,12 +1,18 @@
 name: Seite auf GitHub Pages veroeffentlichen
 
+# Laeuft automatisch bei jedem Push auf main und kann jederzeit von Hand
+# gestartet werden. Solange GitHub Pages fuer dieses private Repository nicht
+# freigeschaltet ist, bricht der Schritt "Pages einrichten" ab - sobald Pages
+# verfuegbar ist (GitHub Pro oder oeffentliches Repository), veroeffentlicht
+# der Workflow die index.html ohne weitere Aenderung.
+
 on:
   push:
     branches: [main]
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -23,44 +29,10 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Pages aktivieren und Ergebnis festhalten
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          {
-            echo "repo private = ${{ github.event.repository.private }}"
-
-            echo "--- POST /pages  (Variante build_type) ---"
-            curl -s -o /tmp/a.json -w 'HTTP %{http_code}\n' -X POST \
-              -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/repos/${{ github.repository }}/pages" \
-              -d '{"build_type":"workflow"}'
-            head -c 500 /tmp/a.json; echo
-
-            echo "--- POST /pages  (Variante source branch) ---"
-            curl -s -o /tmp/b.json -w 'HTTP %{http_code}\n' -X POST \
-              -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/repos/${{ github.repository }}/pages" \
-              -d '{"source":{"branch":"main","path":"/"}}'
-            head -c 500 /tmp/b.json; echo
-
-            echo "--- Gegenprobe: schreibendes Recht ausserhalb von Pages ---"
-            curl -s -o /tmp/c.json -w 'HTTP %{http_code}\n' -X POST \
-              -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/repos/${{ github.repository }}/labels" \
-              -d '{"name":"pages-probe","color":"ededed"}'
-            head -c 300 /tmp/c.json; echo
-          } > pages-diagnose.txt 2>&1
-          cat pages-diagnose.txt
-
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add pages-diagnose.txt
-          git commit -m "Pages-Diagnose aus dem Workflow" || true
-          git push || true
-
       - name: Pages einrichten
         uses: actions/configure-pages@v5
+        with:
+          enablement: true
 
       - name: Seite als Artefakt packen
         uses: actions/upload-pages-artifact@v3
