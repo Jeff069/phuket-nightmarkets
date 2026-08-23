@@ -1,16 +1,25 @@
-GET /pages
-HTTP 404
-{
-  "message": "Not Found",
-  "documentation_url": "https://docs.github.com/rest/pages/pages#get-a-apiname-pages-site",
-  "status": "404"
-}
-
-POST /pages build_type=workflow
+repo private = true
+--- POST /pages  (Variante build_type) ---
 HTTP 403
 {
   "message": "Resource not accessible by integration",
   "documentation_url": "https://docs.github.com/rest/pages/pages#create-a-apiname-pages-site",
+  "status": "403"
+}
+
+--- POST /pages  (Variante source branch) ---
+HTTP 403
+{
+  "message": "Resource not accessible by integration",
+  "documentation_url": "https://docs.github.com/rest/pages/pages#create-a-apiname-pages-site",
+  "status": "403"
+}
+
+--- Gegenprobe: schreibendes Recht ausserhalb von Pages ---
+HTTP 403
+{
+  "message": "Resource not accessible by integration",
+  "documentation_url": "https://docs.github.com/rest/issues/labels#create-a-label",
   "status": "403"
 }
 
