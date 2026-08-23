@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -23,34 +23,33 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Pages-Status pruefen
-        id: probe
-        continue-on-error: true
+      - name: Pages aktivieren und Ergebnis festhalten
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
-          echo '## Pages-Diagnose' >> "$GITHUB_STEP_SUMMARY"
+          {
+            echo "GET /pages"
+            curl -s -o /tmp/get.json -w 'HTTP %{http_code}\n' \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${{ github.repository }}/pages"
+            head -c 800 /tmp/get.json; echo
 
-          code=$(curl -s -o /tmp/get.json -w '%{http_code}' \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${{ github.repository }}/pages")
-          echo "GET /pages -> HTTP $code" >> "$GITHUB_STEP_SUMMARY"
-          echo '```' >> "$GITHUB_STEP_SUMMARY"
-          head -c 600 /tmp/get.json >> "$GITHUB_STEP_SUMMARY"
-          echo '' >> "$GITHUB_STEP_SUMMARY"
-          echo '```' >> "$GITHUB_STEP_SUMMARY"
+            echo "POST /pages build_type=workflow"
+            curl -s -o /tmp/post.json -w 'HTTP %{http_code}\n' -X POST \
+              -H "Authorization: Bearer $GH_TOKEN" \
+              -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${{ github.repository }}/pages" \
+              -d '{"build_type":"workflow"}'
+            head -c 800 /tmp/post.json; echo
+          } > pages-diagnose.txt 2>&1
+          cat pages-diagnose.txt
 
-          code=$(curl -s -o /tmp/post.json -w '%{http_code}' -X POST \
-            -H "Authorization: Bearer $GH_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            "https://api.github.com/repos/${{ github.repository }}/pages" \
-            -d '{"build_type":"workflow"}')
-          echo "POST /pages -> HTTP $code" >> "$GITHUB_STEP_SUMMARY"
-          echo '```' >> "$GITHUB_STEP_SUMMARY"
-          head -c 600 /tmp/post.json >> "$GITHUB_STEP_SUMMARY"
-          echo '' >> "$GITHUB_STEP_SUMMARY"
-          echo '```' >> "$GITHUB_STEP_SUMMARY"
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add pages-diagnose.txt
+          git commit -m "Pages-Diagnose aus dem Workflow" || true
+          git push || true
 
       - name: Pages einrichten
         uses: actions/configure-pages@v5
