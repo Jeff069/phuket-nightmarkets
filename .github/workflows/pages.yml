@@ -28,20 +28,28 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           {
-            echo "GET /pages"
-            curl -s -o /tmp/get.json -w 'HTTP %{http_code}\n' \
-              -H "Authorization: Bearer $GH_TOKEN" \
-              -H "Accept: application/vnd.github+json" \
-              "https://api.github.com/repos/${{ github.repository }}/pages"
-            head -c 800 /tmp/get.json; echo
+            echo "repo private = ${{ github.event.repository.private }}"
 
-            echo "POST /pages build_type=workflow"
-            curl -s -o /tmp/post.json -w 'HTTP %{http_code}\n' -X POST \
-              -H "Authorization: Bearer $GH_TOKEN" \
-              -H "Accept: application/vnd.github+json" \
+            echo "--- POST /pages  (Variante build_type) ---"
+            curl -s -o /tmp/a.json -w 'HTTP %{http_code}\n' -X POST \
+              -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
               "https://api.github.com/repos/${{ github.repository }}/pages" \
               -d '{"build_type":"workflow"}'
-            head -c 800 /tmp/post.json; echo
+            head -c 500 /tmp/a.json; echo
+
+            echo "--- POST /pages  (Variante source branch) ---"
+            curl -s -o /tmp/b.json -w 'HTTP %{http_code}\n' -X POST \
+              -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${{ github.repository }}/pages" \
+              -d '{"source":{"branch":"main","path":"/"}}'
+            head -c 500 /tmp/b.json; echo
+
+            echo "--- Gegenprobe: schreibendes Recht ausserhalb von Pages ---"
+            curl -s -o /tmp/c.json -w 'HTTP %{http_code}\n' -X POST \
+              -H "Authorization: Bearer $GH_TOKEN" -H "Accept: application/vnd.github+json" \
+              "https://api.github.com/repos/${{ github.repository }}/labels" \
+              -d '{"name":"pages-probe","color":"ededed"}'
+            head -c 300 /tmp/c.json; echo
           } > pages-diagnose.txt 2>&1
           cat pages-diagnose.txt
 
