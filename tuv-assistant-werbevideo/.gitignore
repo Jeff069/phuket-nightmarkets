@@ -1,3 +1,6 @@
 node_modules/
 out/frames-qa/
+audio/vo/vits-piper-*/
+audio/vo/*.tar.bz2
+audio/vo/test.mp3
 audio/soundtrack.wav

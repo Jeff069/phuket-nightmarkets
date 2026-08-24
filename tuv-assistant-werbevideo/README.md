@@ -19,9 +19,10 @@ abfotografiert und mit einer programmatisch synthetisierten Tonspur gemischt wir
 | 0:41–0:50 | **Das Ergebnis** — 4 Check-Punkte, Kalender füllt sich von allein |
 | 0:50–0:58 | **Finale** — WhatsApp → KI → Kalender, Claim „WhatsApp rein. Termin drin.“ + 0-€-Hinweis mit Disclaimer |
 
-Alle Sprechertexte laufen als elegante Untertitel-Zeilen mit — das Video funktioniert
-damit auch stumm (Social-Media-Autoplay). Ein Voiceover-Skript mit Timecodes liegt in
-[`VOICEOVER.md`](VOICEOVER.md) und kann jederzeit als zusätzliche Tonspur ergänzt werden.
+Das Video hat ein deutsches Voiceover (lokal synthetisiert mit Piper TTS, Stimme
+„Thorsten“) — alle Sprechertexte laufen zusätzlich als Untertitel mit, das Video
+funktioniert also auch stumm (Social-Media-Autoplay). Details und Timecodes in
+[`VOICEOVER.md`](VOICEOVER.md); dort steht auch, wie man eine eigene Sprecher-Aufnahme einmischt.
 
 ## Neu rendern
 
@@ -57,8 +58,8 @@ node render/render.mjs --snap 3.5,29.4,53.9   # → out/frames-qa/*.png
 - **`render/render.mjs`** — Playwright steuert Chromium, macht pro Frame einen
   JPEG-Screenshot und pipet ihn direkt in ffmpeg (libx264, CRF 19, `+faststart`).
 - **`audio/make_audio.mjs`** — synthesizert die komplette Tonspur in Node (ohne
-  Samples): dezenter Tech-Beat bei 104 BPM (Am–F–C–G), Kick/Hats/Clap/Bass/Pad/Pluck,
-  dazu szenengenaue Sound-Effekte (Klingeln, WhatsApp-Blips, Whooshes, Buchungs-Chime,
+  Samples): entspannter Tech-Beat bei 96 BPM (Am7–Fmaj7–Cmaj7–G7), weiche Kicks, Pads und E-Piano,
+  dazu ein deutsches Voiceover (Piper TTS, lokal, mit automatischem Ducking) und szenengenaue Sound-Effekte (Klingeln, WhatsApp-Blips, Whooshes, Buchungs-Chime,
   Check-Pops, Finale-Impact) — sample-genau auf die Film-Timeline gesetzt.
 
 ## Anpassen
