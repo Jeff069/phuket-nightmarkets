@@ -9,9 +9,9 @@ name: Seite auf GitHub Pages veroeffentlichen
 # "Pages: write" UND "Administration: write", und das GITHUB_TOKEN eines
 # Workflows erhaelt "Administration: write" nie.
 
+# Nur manuell: solange Pages nicht eingeschaltet ist, wuerde jeder Push sonst
+# einen roten Lauf erzeugen. Nach dem Einschalten hier wieder "push" ergaenzen.
 on:
-  push:
-    branches: [main]
   workflow_dispatch:
 
 permissions:
