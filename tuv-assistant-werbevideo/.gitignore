@@ -5,3 +5,10 @@ audio/vo/*.tar.bz2
 audio/vo/test.mp3
 audio/soundtrack.wav
 out/hoerprobe.mp3
+audio/vo/vits-coqui-de-css10/
+audio/vo/css10.tar.bz2
+audio/vo/emo.tar.bz2
+audio/vo/vits-piper-de_DE-thorsten_emotional-medium/
+audio/vo/raw?.wav
+audio/vo/cand_*.wav
+audio/vo/test_*.wav

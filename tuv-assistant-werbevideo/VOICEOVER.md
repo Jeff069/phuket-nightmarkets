@@ -1,8 +1,10 @@
 # Voiceover
 
-Das Video enthält bereits ein deutsches Voiceover: lokal synthetisiert mit
-**Piper TTS**, Stimme `de_DE-thorsten_emotional-medium`, Sprecher-Modus „amused" (freundlich-fröhliche neuronale Stimme, 22 kHz), gemischt
-mit automatischem Ducking (Musikbett senkt sich unter der Stimme um ca. 7 dB ab).
+Das Video enthält bereits ein deutsches Voiceover: lokal synthetisiert mit dem
+Coqui-VITS-Modell **`vits-coqui-de-css10`** (via sherpa-onnx) — eine helle, weiche,
+sehr gleichmäßig fließende Stimme — anschließend veredelt mit einer Studio-Kette
+(Hochpass, Entmulmung bei 350 Hz, Präsenz bei 3 kHz, Höhen-Shelf, Kompressor,
+Limiter). Gemischt mit automatischem Ducking (Musik senkt sich unter der Stimme ab).
 
 ## Timecodes
 
@@ -22,13 +24,15 @@ Die fertigen Zeilen liegen als `audio/vo/vo1.wav` … `vo7.wav` im Repo — der
 Mix (`node audio/make_audio.mjs`) braucht nur diese Dateien. Zum Neu-Einsprechen:
 
 ```bash
-pip install piper-tts
+pip install sherpa-onnx
 cd audio/vo
-curl -sSL -o thorsten.tar.bz2 \
-  https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-de_DE-thorsten_emotional-medium.tar.bz2
-tar xjf thorsten.tar.bz2
-python3 -m piper -m vits-piper-de_DE-thorsten_emotional-medium/de_DE-thorsten_emotional-medium.onnx \
-  -s 0 --length-scale 0.94 --sentence-silence 0.3 -f vo1.wav -- "Das Telefon klingelt. …"
+curl -sSL -o css10.tar.bz2 \
+  https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-coqui-de-css10.tar.bz2
+tar xjf css10.tar.bz2
+# Synthese: sherpa_onnx.OfflineTts mit model.onnx + tokens.txt, sid=0
+# danach Politur pro Datei (ffmpeg):
+#   highpass=f=90, equalizer 350Hz -2dB, equalizer 3kHz +2dB, treble +2.5dB,
+#   acompressor 2.5:1, alimiter 0.93, aresample=44100
 ```
 
 Danach Tonspur + Video neu bauen:

@@ -59,7 +59,7 @@ node render/render.mjs --snap 3.5,29.4,53.9   # → out/frames-qa/*.png
   JPEG-Screenshot und pipet ihn direkt in ffmpeg (libx264, CRF 19, `+faststart`).
 - **`audio/make_audio.mjs`** — synthesizert die komplette Tonspur in Node (ohne
   Samples): origineller 80s-Soul/Funk-Groove bei 106 BPM (Am9↔D9-Vamp, Fmaj7/G6-Bridge): swingende Drums, funky Bassriff, Rhodes-Stabs, Snaps —
-  dazu ein deutsches Voiceover (Piper TTS „Thorsten emotional/amused", lokal, mit automatischem Ducking) und szenengenaue Sound-Effekte (Klingeln, WhatsApp-Blips, Whooshes, Buchungs-Chime,
+  dazu ein deutsches Voiceover (Coqui-VITS „CSS10", lokal via sherpa-onnx, mit Studio-Politur und automatischem Ducking) und szenengenaue Sound-Effekte (Klingeln, WhatsApp-Blips, Whooshes, Buchungs-Chime,
   Check-Pops, Finale-Impact) — sample-genau auf die Film-Timeline gesetzt.
 
 ## Anpassen
