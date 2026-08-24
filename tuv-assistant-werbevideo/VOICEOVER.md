@@ -27,8 +27,8 @@ cd audio/vo
 curl -sSL -o thorsten.tar.bz2 \
   https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-de_DE-thorsten_emotional-medium.tar.bz2
 tar xjf thorsten.tar.bz2
-python3 -m piper -m vits-piper-de_DE-thorsten-high/de_DE-thorsten-high.onnx \
-  --sentence-silence 0.32 -f vo1.wav -- "Das Telefon klingelt. …"
+python3 -m piper -m vits-piper-de_DE-thorsten_emotional-medium/de_DE-thorsten_emotional-medium.onnx \
+  -s 0 --length-scale 0.94 --sentence-silence 0.3 -f vo1.wav -- "Das Telefon klingelt. …"
 ```
 
 Danach Tonspur + Video neu bauen:
