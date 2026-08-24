@@ -58,8 +58,8 @@ node render/render.mjs --snap 3.5,29.4,53.9   # → out/frames-qa/*.png
 - **`render/render.mjs`** — Playwright steuert Chromium, macht pro Frame einen
   JPEG-Screenshot und pipet ihn direkt in ffmpeg (libx264, CRF 19, `+faststart`).
 - **`audio/make_audio.mjs`** — synthesizert die komplette Tonspur in Node (ohne
-  Samples): entspannter Tech-Beat bei 96 BPM (Am7–Fmaj7–Cmaj7–G7), weiche Kicks, Pads und E-Piano,
-  dazu ein deutsches Voiceover (Piper TTS, lokal, mit automatischem Ducking) und szenengenaue Sound-Effekte (Klingeln, WhatsApp-Blips, Whooshes, Buchungs-Chime,
+  Samples): origineller 80s-Soul/Funk-Groove bei 106 BPM (Am9↔D9-Vamp, Fmaj7/G6-Bridge): swingende Drums, funky Bassriff, Rhodes-Stabs, Snaps —
+  dazu ein deutsches Voiceover (Piper TTS „Thorsten emotional/amused", lokal, mit automatischem Ducking) und szenengenaue Sound-Effekte (Klingeln, WhatsApp-Blips, Whooshes, Buchungs-Chime,
   Check-Pops, Finale-Impact) — sample-genau auf die Film-Timeline gesetzt.
 
 ## Anpassen

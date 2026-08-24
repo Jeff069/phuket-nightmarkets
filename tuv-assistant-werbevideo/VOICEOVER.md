@@ -1,7 +1,7 @@
 # Voiceover
 
 Das Video enthält bereits ein deutsches Voiceover: lokal synthetisiert mit
-**Piper TTS**, Stimme `de_DE-thorsten-high` (neuronale Stimme, 22 kHz), gemischt
+**Piper TTS**, Stimme `de_DE-thorsten_emotional-medium`, Sprecher-Modus „amused" (freundlich-fröhliche neuronale Stimme, 22 kHz), gemischt
 mit automatischem Ducking (Musikbett senkt sich unter der Stimme um ca. 7 dB ab).
 
 ## Timecodes
@@ -25,7 +25,7 @@ Mix (`node audio/make_audio.mjs`) braucht nur diese Dateien. Zum Neu-Einsprechen
 pip install piper-tts
 cd audio/vo
 curl -sSL -o thorsten.tar.bz2 \
-  https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-de_DE-thorsten-high.tar.bz2
+  https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/vits-piper-de_DE-thorsten_emotional-medium.tar.bz2
 tar xjf thorsten.tar.bz2
 python3 -m piper -m vits-piper-de_DE-thorsten-high/de_DE-thorsten-high.onnx \
   --sentence-silence 0.32 -f vo1.wav -- "Das Telefon klingelt. …"

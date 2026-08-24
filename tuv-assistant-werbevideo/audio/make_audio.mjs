@@ -1,8 +1,9 @@
 #!/usr/bin/env node
 /**
- * Synthesizes the complete soundtrack — relaxed music bed + sound effects +
- * German voiceover (Piper TTS, audio/vo/vo1..7.wav) — sample-accurate to the
- * film timeline in film/index.html. Music ducks automatically under the voice.
+ * Synthesizes the complete soundtrack — an original 80s-soul/funk groove
+ * (swung drums, fingered bass riff, Rhodes stabs, snaps — cool & laid-back),
+ * scene-accurate sound effects, and the German voiceover (audio/vo/vo1..7.wav).
+ * Music ducks automatically under the voice.
  * Output: audio/soundtrack.wav  (44.1 kHz, 16-bit stereo)
  */
 import { writeFileSync, readFileSync, existsSync } from 'node:fs';
@@ -14,10 +15,9 @@ const DUR = 58;
 const N = SR * DUR;
 const dir = path.dirname(fileURLToPath(import.meta.url));
 
-/* separate stems: music (ducked), fx, voice */
-const ML = new Float64Array(N), MR = new Float64Array(N);
-const FL = new Float64Array(N), FR = new Float64Array(N);
-const VL = new Float64Array(N), VR = new Float64Array(N);
+const ML = new Float64Array(N), MR = new Float64Array(N);   // music (ducked)
+const FL = new Float64Array(N), FR = new Float64Array(N);   // sfx
+const VL = new Float64Array(N), VR = new Float64Array(N);   // voice
 
 let seed = 0x5eed;
 const rnd = () => {
@@ -46,68 +46,81 @@ const addF = (...a) => addTo(FL, FR, ...a);
 const env = (t, a, hold, rel) => t < a ? t / a : t < a + hold ? 1 : Math.max(0, 1 - (t - a - hold) / rel);
 const exp = (t, tau) => Math.exp(-t / tau);
 
-/* ------------------------------------------------ music instruments (soft) */
+/* ------------------------------------------------ groove instruments */
 function kick(t0, g = 0.3) {
-  addM(t0, 0.42, g, 0, (t) => {
-    const f = 40 + 62 * Math.exp(-t / 0.07);
-    return Math.sin(TAU * (f * t + 0.5 * 0.07 * 62 * (1 - Math.exp(-t / 0.07)))) * exp(t, 0.16);
+  addM(t0, 0.3, g, 0, (t) => {
+    const f = 44 + 70 * Math.exp(-t / 0.05);
+    return Math.sin(TAU * (f * t + 0.5 * 0.05 * 70 * (1 - Math.exp(-t / 0.05)))) * exp(t, 0.11)
+      + (t < 0.003 ? (rnd() * 2 - 1) * 0.3 * (1 - t / 0.003) : 0);
   });
 }
-function hat(t0, g = 0.032, pan = 0.18) {
+function backbeat(t0, g = 0.1) {   // warm 80s rim + snap layer on 2 & 4
+  let lp = 0;
+  addM(t0, 0.22, g, -0.06, (t) => {
+    const n = rnd() * 2 - 1;
+    lp += 0.3 * (n - lp);
+    const body = Math.sin(TAU * 195 * t) * exp(t, 0.045) * 0.8;
+    const crack = lp * 2.4 * exp(t, 0.055);
+    return body + crack;
+  });
+  addM(t0 + 0.004, 0.09, g * 0.55, 0.1, (t) => {   // finger snap
+    const n = rnd() * 2 - 1;
+    return n * Math.sin(TAU * 2100 * t) * exp(t, 0.018);
+  });
+}
+function hat(t0, g = 0.03, open = false, pan = 0.18) {
   let p = 0;
-  addM(t0, 0.07, g, pan, (t) => {
+  addM(t0, open ? 0.2 : 0.06, g, pan, (t) => {
     const n = rnd() * 2 - 1;
     const hp = n - p; p = n;
-    return hp * exp(t, 0.02);
+    return hp * exp(t, open ? 0.06 : 0.017);
   });
 }
-function shaker(t0, g = 0.028) {
+function shaker(t0, g = 0.022) {
   let lp = 0, p = 0;
-  addM(t0, 0.22, g, -0.2, (t) => {
+  addM(t0, 0.1, g, -0.22, (t) => {
     const n = rnd() * 2 - 1;
-    lp += 0.5 * (n - lp); const hp = lp - p; p = lp;
-    return hp * 6 * Math.sin(Math.PI * Math.min(1, t / 0.22)) ** 2;
+    lp += 0.55 * (n - lp); const hp = lp - p; p = lp;
+    return hp * 6 * Math.sin(Math.PI * Math.min(1, t / 0.1)) ** 2;
   });
 }
-function snap(t0, g = 0.075) {   // soft rim/snap instead of a clap
+function bassNote(t0, f, dur, g = 0.15, ghost = false) {   // fingered funk bass
   let lp = 0;
-  addM(t0, 0.16, g, -0.08, (t) => {
-    const n = rnd() * 2 - 1;
-    lp += 0.22 * (n - lp);
-    return (lp * 2.2 + Math.sin(TAU * 190 * t) * 0.5) * exp(t, 0.045);
+  addM(t0, dur + 0.09, g * (ghost ? 0.5 : 1), 0, (t) => {
+    let s = Math.sin(TAU * f * t) + 0.5 * Math.sin(TAU * f * 2 * t) + 0.18 * Math.sin(TAU * f * 3 * t)
+      + 0.5 * Math.sin(TAU * f * 0.5 * t);
+    lp += 0.14 * (s - lp);
+    const pluckNoise = t < 0.006 ? (rnd() * 2 - 1) * 0.35 * (1 - t / 0.006) : 0;
+    return (lp + pluckNoise) * env(t, 0.006, Math.max(0, dur - 0.06), 0.07) * exp(t, dur + 0.3);
   });
 }
-function bassNote(t0, f, dur, g = 0.13) {
-  let lp = 0;
-  addM(t0, dur + 0.12, g, 0, (t) => {
-    let s = Math.sin(TAU * f * t) + 0.35 * Math.sin(TAU * f * 2 * t) + 0.55 * Math.sin(TAU * f * 0.5 * t);
-    lp += 0.12 * (s - lp);
-    return lp * env(t, 0.015, Math.max(0, dur - 0.1), 0.11);
-  });
+function rhodes(t0, freqs, dur, g = 0.05, stab = true) {
+  for (const f of freqs) {
+    const ph = rnd() * TAU;
+    addM(t0, dur + 0.5, g, (rnd() - 0.5) * 0.5, (t) => {
+      const trem = 1 + 0.13 * Math.sin(TAU * 4.6 * t + ph);
+      const s = Math.sin(TAU * f * t + ph) + 0.42 * Math.sin(TAU * f * 2 * t) * exp(t, 0.25)
+        + 0.1 * Math.sin(TAU * f * 4 * t) * exp(t, 0.08);
+      return s * trem * env(t, 0.006, stab ? 0.02 : Math.max(0, dur - 0.5), stab ? dur : 0.9);
+    });
+  }
 }
-function padChord(t0, freqs, dur, g = 0.05) {
+function padChord(t0, freqs, dur, g = 0.03) {   // low glue pad
   for (const f of freqs) {
     for (const det of [-0.3, 0.3]) {
       const ff = f * (1 + det / 100);
       const ph = rnd() * TAU;
       let lp = 0;
-      addM(t0, dur + 1.6, g, det > 0 ? 0.32 : -0.32, (t) => {
-        let s = Math.sin(TAU * ff * t + ph) + 0.35 * Math.sin(TAU * ff * 2 * t + ph * 1.7) + 0.1 * Math.sin(TAU * ff * 3 * t);
+      addM(t0, dur + 1.4, g, det > 0 ? 0.3 : -0.3, (t) => {
+        let s = Math.sin(TAU * ff * t + ph) + 0.3 * Math.sin(TAU * ff * 2 * t + ph * 1.7);
         lp += 0.05 * (s - lp);
-        return lp * env(t, 1.0, Math.max(0, dur - 1.0), 1.6);
+        return lp * env(t, 0.9, Math.max(0, dur - 0.9), 1.4);
       });
     }
   }
 }
-function piano(t0, f, g = 0.06, echo = true) {   // soft e-piano tone
-  const voice = (tt0, gg) => addM(tt0, 1.1, gg, (rnd() - 0.5) * 0.4, (t) =>
-    (Math.sin(TAU * f * t) + 0.35 * Math.sin(TAU * f * 2 * t) + 0.08 * Math.sin(TAU * f * 4 * t))
-    * exp(t, 0.35) * env(t, 0.004, 0, 1.05));
-  voice(t0, g);
-  if (echo) voice(t0 + 0.625, g * 0.3);
-}
 
-/* ------------------------------------------------ sfx (slightly softened) */
+/* ------------------------------------------------ sfx */
 function ringTone(t0, g = 0.1) {
   for (const off of [0, 0.42]) {
     let lp = 0;
@@ -183,62 +196,96 @@ function checkPop(t0, i, g = 0.14) {
   tick(t0, 1.3, 0.045);
 }
 
-/* ------------------------------------------------ relaxed music bed */
-const BPM = 96, BEAT = 60 / BPM, BAR = BEAT * 4;
+/* ------------------------------------------------ the groove */
+const BPM = 106, BEAT = 60 / BPM, BAR = 4 * BEAT, SIX = BEAT / 4;
+const SWING = 0.30;                       // odd 16ths land late — laid-back
 const M0 = 7.0;
 const MUSIC_END = 50.05;
+const stepT = (barT, step) => barT + step * SIX + (step % 2 === 1 ? SWING * SIX : 0);
 
-/* warm 7th-chord progression, 2 bars each */
+/* two-chord soul vamp Am9 ↔ D9; warm Fmaj7/G6 bridge; Am9 outro */
 const CH = {
-  Am7:   { pad: [220, 261.63, 329.63, 392], root: 110, mot: [440, 523.25] },
-  Fmaj7: { pad: [174.61, 220, 261.63, 329.63], root: 87.31, mot: [349.23, 440] },
-  Cmaj7: { pad: [196, 246.94, 261.63, 329.63], root: 130.81, mot: [392, 523.25] },
-  G7:    { pad: [196, 246.94, 293.66, 349.23], root: 98, mot: [392, 493.88] },
+  Am9: { rho: [261.63, 329.63, 392, 493.88], root: 110, pad: [110, 164.81], spark: 659.25 },
+  D9:  { rho: [185, 220, 261.63, 329.63], root: 146.83, pad: [73.42, 110], spark: 587.33 },
+  F7:  { rho: [220, 261.63, 329.63, 174.61], root: 87.31, pad: [87.31, 130.81], spark: 523.25 },
+  G6:  { rho: [246.94, 293.66, 329.63, 392], root: 98, pad: [98, 146.83], spark: 587.33 },
 };
-const PROG = ['Am7', 'Fmaj7', 'Cmaj7', 'G7'];
 function chordAt(t) {
-  const idx = Math.floor((t - M0) / (2 * BAR));
-  return CH[PROG[((idx % 4) + 4) % 4]];
+  if (t >= 50) return CH.Am9;
+  const bar2 = Math.floor((t - M0) / (2 * BAR));
+  if (t >= 34 && t < 41) return bar2 % 2 === 0 ? CH.F7 : CH.G6;
+  return bar2 % 2 === 0 ? CH.Am9 : CH.D9;
 }
 
-/* intro 0–7: warm low pad, gentle pulse */
-padChord(0.2, [110, 164.81, 220], 6.4, 0.04);
+/* intro 0–7: warm, slightly tense, sparse snaps */
+padChord(0.2, [110, 164.81, 220], 6.4, 0.038);
 addM(0.2, 6.8, 0.045, 0, (t) => Math.sin(TAU * 55 * t) * env(t, 1.4, 4.2, 1.2));
+for (const t of [2.26, 3.4, 4.53, 5.66]) backbeat(t, 0.05);
 
-/* pads on the 2-bar grid */
-for (let t = M0; t < 55.5; t += 2 * BAR) {
+/* glue pads on the 2-bar grid */
+for (let t = M0; t < 55.0; t += 2 * BAR) {
   const c = chordAt(t + 0.01);
-  padChord(t, c.pad, 2 * BAR, t >= 34 && t < 41 ? 0.062 : 0.052);
+  padChord(t, c.pad, 2 * BAR, t >= 34 && t < 41 ? 0.038 : 0.03);
 }
 
-/* drums + bass — halftime, soft */
-for (let t = M0; t < MUSIC_END; t += BEAT) {
-  const beatIdx = Math.round((t - M0) / BEAT);
-  const bar = Math.floor(beatIdx / 4), pos = beatIdx % 4;
-  const lite = t < 14, peak = t >= 41;
-  const c = chordAt(t);
+/* bar loop */
+for (let b = M0; b < MUSIC_END - 0.01; b += BAR) {
+  const c = chordAt(b + 0.01);
+  const bar = Math.round((b - M0) / BAR);
+  const lite = b < 14, bridge = b >= 34 && b < 41, peak = b >= 41;
 
-  if (pos === 0) kick(t, lite ? 0.24 : 0.3);
-  if (pos === 2 && !lite) kick(t, 0.26);
-  if (pos === 1 && !lite && t >= 25) snap(t, t >= 41 ? 0.085 : 0.065);
-  if ((pos === 1 || pos === 3) && !lite) hat(t + BEAT / 2, peak ? 0.036 : 0.028);
-  if (peak && pos === 3 && bar % 2 === 1) shaker(t + BEAT / 2);
+  /* drums */
+  kick(stepT(b, 0), lite ? 0.26 : 0.3);
+  if (!bridge) kick(stepT(b, 8), lite ? 0.22 : 0.27);
+  if (!lite && !bridge && bar % 2 === 1) kick(stepT(b, 14), 0.16);
+  if (!lite) { backbeat(stepT(b, 4), bridge ? 0.07 : 0.1); backbeat(stepT(b, 12), bridge ? 0.07 : 0.1); }
+  for (let s = 0; s < 16; s += 2) {                       // swung 8th hats
+    if (lite && s % 4 !== 2) continue;
+    const accent = s % 4 === 2;
+    hat(stepT(b, s), (accent ? 0.032 : 0.02) * (bridge ? 0.7 : 1));
+  }
+  if (peak && bar % 2 === 1) hat(stepT(b, 14), 0.034, true);
+  if ((b >= 25 && !bridge) || peak) for (let s = 1; s < 16; s += 2) shaker(stepT(b, s), peak ? 0.02 : 0.015);
 
-  /* legato-ish bass: root at bar start, gentle fifth mid-bar */
-  if (!lite) {
-    if (pos === 0) bassNote(t, c.root, BEAT * 1.6, 0.125);
-    if (pos === 2) bassNote(t, c.root, BEAT * 1.1, 0.095);
-  } else if (pos === 0) bassNote(t, c.root, BEAT * 1.6, 0.09);
+  /* original fingered-bass riff (alternating 2-bar pattern) */
+  const R = c.root, O = R * 2, F5 = R * 1.5, S7 = R * 16 / 18;
+  if (lite) {
+    bassNote(stepT(b, 0), R, SIX * 3.2, 0.13);
+    bassNote(stepT(b, 8), R, SIX * 2.6, 0.11);
+  } else if (bridge) {
+    bassNote(stepT(b, 0), R, SIX * 6.4, 0.125);
+    bassNote(stepT(b, 8), F5, SIX * 4.2, 0.1);
+  } else if (bar % 2 === 0) {
+    bassNote(stepT(b, 0), R, SIX * 2.6, 0.155);
+    bassNote(stepT(b, 3), O, SIX * 0.9, 0.115);
+    bassNote(stepT(b, 6), F5, SIX * 1.2, 0.12);
+    bassNote(stepT(b, 8), R, SIX * 1.8, 0.14);
+    bassNote(stepT(b, 11), S7, SIX * 1.0, 0.11);
+    bassNote(stepT(b, 14), O, SIX * 0.9, 0.12);
+  } else {
+    bassNote(stepT(b, 0), R, SIX * 1.8, 0.155);
+    bassNote(stepT(b, 2), R, SIX * 0.8, 0.1, true);
+    bassNote(stepT(b, 6), O, SIX * 1.0, 0.12);
+    bassNote(stepT(b, 8), F5, SIX * 1.8, 0.125);
+    bassNote(stepT(b, 12), S7, SIX * 1.0, 0.11);
+    bassNote(stepT(b, 14), R, SIX * 1.4, 0.13);
+  }
+
+  /* Rhodes: stabs on the "&" of 2 and on 4, long chords to open phrases */
+  if (lite || bridge) {
+    if (bar % 2 === 0) rhodes(stepT(b, 0), c.rho, BAR * 1.8, bridge ? 0.05 : 0.04, false);
+  } else {
+    if (bar % 4 === 0) rhodes(stepT(b, 0), c.rho, BAR * 1.1, 0.035, false);
+    rhodes(stepT(b, 6), c.rho, 0.42, 0.042);
+    rhodes(stepT(b, 12), c.rho, 0.36, 0.036);
+    if (peak && bar % 2 === 1) rhodes(stepT(b, 15), [c.spark], 0.5, 0.032);
+  }
 }
 
-/* sparse e-piano motif: two notes per 2-bar phrase (from 14 on) */
-for (let t = M0 + 2 * BAR; t < MUSIC_END - 1; t += 2 * BAR) {
-  if (t < 14) continue;
-  const c = chordAt(t);
-  piano(t + BEAT * 1.5, c.mot[0], 0.055);
-  piano(t + BEAT * 5, c.mot[1], 0.045);
-  if (t >= 41) piano(t + BEAT * 6.5, c.mot[0] * 1.5, 0.035);
-}
+/* outro 50–58: big warm Am9 */
+rhodes(50.4, [220, 261.63, 329.63, 392, 493.88], 5.2, 0.05, false);
+padChord(50.35, [110, 164.81, 220], 5.2, 0.045);
+bassNote(50.4, 55, 3.6, 0.11);
 
 /* ------------------------------------------------ sfx on the film timeline */
 ringTone(0.6); ringTone(3.0);
@@ -270,8 +317,6 @@ whoosh(41.0, 0.6, 0.06);
 [42.4, 43.15, 43.9, 44.65, 45.4, 46.15, 46.9, 47.65].forEach((t, i) => tick(t, 1 + i * 0.06, 0.03));
 riser(48.6, 1.7, 0.1);
 impact(50.35, 0.4, true); shimmer(50.4, 0.038);
-padChord(50.35, [220, 261.63, 329.63, 440], 5.4, 0.06);
-bassNote(50.35, 55, 3.4, 0.11);
 tick(52.4, 0.6, 0.045); tick(53.6, 0.8, 0.045);
 
 /* ------------------------------------------------ voiceover */
@@ -297,7 +342,6 @@ function readWavMono(file) {
   return { sr: fmt.sr, mono };
 }
 
-/* start time per line — matches the caption windows in the film */
 const VO = [
   ['vo1.wav', 1.0], ['vo2.wav', 10.2], ['vo3.wav', 15.6], ['vo4.wav', 28.4],
   ['vo5.wav', 36.8], ['vo6.wav', 43.4], ['vo7.wav', 52.5],
@@ -307,7 +351,6 @@ for (const [file, t0] of VO) {
   const fp = path.join(dir, 'vo', file);
   if (!existsSync(fp)) { console.warn('missing VO file, skipping:', fp); continue; }
   const { sr, mono } = readWavMono(fp);
-  /* trim trailing silence, normalize to a consistent peak */
   let end = mono.length - 1;
   while (end > 0 && Math.abs(mono[end]) < 0.004) end--;
   let peak = 0;
@@ -328,14 +371,13 @@ for (const [file, t0] of VO) {
   console.log(`VO ${file}  ${t0.toFixed(2)}s → ${(t0 + durS).toFixed(2)}s`);
 }
 
-/* duck gain envelope for the music while the voice speaks */
 function duckGain(t) {
   let g = 1;
   for (const [a, b] of duckWins) {
     if (t < a || t > b + 0.35) continue;
     const fadeIn = Math.min(1, (t - a) / 0.22);
     const fadeOut = t <= b ? 1 : Math.max(0, 1 - (t - b) / 0.35);
-    g = Math.min(g, 1 - 0.55 * Math.min(fadeIn, fadeOut));
+    g = Math.min(g, 1 - 0.52 * Math.min(fadeIn, fadeOut));
   }
   return g;
 }
