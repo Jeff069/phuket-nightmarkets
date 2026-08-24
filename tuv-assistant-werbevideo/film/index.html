@@ -1,0 +1,1058 @@
+<!doctype html>
+<html lang="de">
+<head>
+<meta charset="utf-8">
+<title>Der digitale TÜV-Assistent — Werbefilm</title>
+<style>
+  @font-face { font-family:'Inter'; font-weight:400; src:url('fonts/inter-latin-400-normal.woff2') format('woff2'); }
+  @font-face { font-family:'Inter'; font-weight:500; src:url('fonts/inter-latin-500-normal.woff2') format('woff2'); }
+  @font-face { font-family:'Inter'; font-weight:600; src:url('fonts/inter-latin-600-normal.woff2') format('woff2'); }
+  @font-face { font-family:'Inter'; font-weight:700; src:url('fonts/inter-latin-700-normal.woff2') format('woff2'); }
+  @font-face { font-family:'Inter'; font-weight:800; src:url('fonts/inter-latin-800-normal.woff2') format('woff2'); }
+
+  :root{
+    --green:#25D366; --green-deep:#128C5E;
+    --blue:#4EA8FF; --red:#FF5A5F; --amber:#FFB020;
+    --ink:#E9EDF2; --ink-dim:#9AA7B4;
+    --bubble-in:#1F2C34; --bubble-out:#005C4B; --wa-bg:#0B141A;
+  }
+  *{ margin:0; padding:0; box-sizing:border-box; }
+  html,body{ background:#000; }
+  body{ font-family:'Inter',system-ui,sans-serif; -webkit-font-smoothing:antialiased; text-rendering:optimizeLegibility; }
+  #stage{ position:relative; width:1920px; height:1080px; overflow:hidden; background:#0A0E13; }
+  #stage *{ transition:none !important; animation:none !important; }
+  .abs{ position:absolute; }
+  .hidden{ display:none !important; }
+
+  /* ---------- background ---------- */
+  #bg{ inset:0; }
+  .blob{ position:absolute; width:1200px; height:1200px; border-radius:50%; filter:blur(110px); }
+  #blobA{ background:radial-gradient(circle,rgba(30,80,140,.42),rgba(30,80,140,0) 62%); }
+  #blobB{ background:radial-gradient(circle,rgba(18,105,74,.34),rgba(18,105,74,0) 62%); }
+  #dots{ inset:0; opacity:.05;
+    background-image:radial-gradient(rgba(255,255,255,.9) 1px, transparent 1.4px);
+    background-size:34px 34px; }
+  #vignette{ inset:0; background:radial-gradient(ellipse 105% 90% at 50% 44%, transparent 55%, rgba(0,0,0,.55) 100%); }
+
+  /* ---------- caption (Sprechertext) ---------- */
+  #caption{ left:0; right:0; bottom:44px; text-align:center; }
+  #captionInner{ display:inline-block; max-width:1260px; font-size:31px; font-weight:500; line-height:1.4;
+    color:rgba(240,245,250,.94); text-shadow:0 2px 18px rgba(0,0,0,.65); letter-spacing:.2px; }
+  #captionRule{ width:56px; height:3px; border-radius:2px; background:var(--green); margin:0 auto 12px; }
+
+  /* ---------- brand badge ---------- */
+  #brand{ top:34px; left:44px; display:flex; align-items:center; gap:10px; }
+  #brand .dot{ width:9px; height:9px; border-radius:50%; background:var(--green); box-shadow:0 0 12px rgba(37,211,102,.8); }
+  #brand .txt{ font-size:15px; font-weight:600; letter-spacing:2.6px; color:rgba(233,237,242,.6); }
+
+  /* ---------- generic card ---------- */
+  .card{ background:rgba(20,27,34,.78); border:1px solid rgba(255,255,255,.09); border-radius:20px;
+    box-shadow:0 22px 60px rgba(0,0,0,.5); }
+
+  /* ================= SCENE 1 ================= */
+  #s1{ inset:0; }
+  #callCard{ left:730px; top:150px; width:460px; padding:30px 34px; text-align:center; }
+  #callAvatar{ width:88px; height:88px; margin:0 auto 16px; border-radius:50%;
+    background:linear-gradient(140deg,#2ee27a,#128C5E); display:flex; align-items:center; justify-content:center;
+    box-shadow:0 8px 30px rgba(37,211,102,.35); }
+  #callTitle{ font-size:26px; font-weight:700; color:var(--ink); }
+  #callSub{ font-size:19px; font-weight:500; color:var(--ink-dim); margin-top:5px; }
+  #callBtns{ display:flex; justify-content:center; gap:110px; margin-top:24px; }
+  .callBtn{ width:66px; height:66px; border-radius:50%; display:flex; align-items:center; justify-content:center; }
+  #btnAccept{ background:#22c55e; box-shadow:0 6px 24px rgba(34,197,94,.45); }
+  #btnDecline{ background:#ef4444; box-shadow:0 6px 24px rgba(239,68,68,.4); }
+  .ripple{ position:absolute; left:50%; top:114px; width:120px; height:120px; margin-left:-60px; margin-top:-16px;
+    border:2px solid rgba(37,211,102,.75); border-radius:50%; }
+  .toast{ position:absolute; left:1275px; width:480px; padding:16px 20px; display:flex; gap:14px; align-items:flex-start;
+    background:rgba(24,32,40,.9); border:1px solid rgba(255,255,255,.1); border-radius:16px;
+    box-shadow:0 14px 40px rgba(0,0,0,.45); }
+  .toast .ticon{ width:44px; height:44px; flex:0 0 44px; border-radius:12px; background:rgba(37,211,102,.16);
+    display:flex; align-items:center; justify-content:center; }
+  .toast .tname{ font-size:16px; font-weight:700; color:var(--green); letter-spacing:.3px; }
+  .toast .tmsg{ font-size:19px; font-weight:500; color:var(--ink); margin-top:3px; line-height:1.3; }
+  .toast .ttime{ margin-left:auto; font-size:14px; color:var(--ink-dim); font-weight:500; padding-top:2px; }
+  .pill{ position:absolute; left:250px; display:flex; align-items:center; gap:10px; padding:12px 20px;
+    border-radius:999px; font-size:19px; font-weight:600; }
+  #pillCalls{ top:296px; background:rgba(239,68,68,.14); border:1px solid rgba(239,68,68,.4); color:#ff8f93; }
+  #pillMsgs{ top:376px; background:rgba(37,211,102,.12); border:1px solid rgba(37,211,102,.38); color:#5fe08d; }
+  #s1Head{ left:0; right:0; top:590px; text-align:center; }
+  #s1HeadA{ font-size:62px; font-weight:800; color:var(--ink); letter-spacing:-.5px; }
+  #s1HeadB{ font-size:88px; font-weight:800; color:var(--green); letter-spacing:-1px; margin-top:6px;
+    text-shadow:0 0 40px rgba(37,211,102,.35); }
+  #garage{ left:70px; bottom:110px; opacity:.16; }
+
+  /* ================= PHONE ================= */
+  #phoneWrap{ left:960px; top:540px; width:0; height:0; }
+  #phone{ position:absolute; left:-200px; top:-400px; width:400px; height:800px;
+    background:#10151a; border-radius:52px; border:3px solid #262e36;
+    box-shadow:0 40px 90px rgba(0,0,0,.62), 0 0 0 9px #05070a, 0 0 70px rgba(37,211,102,.07); overflow:hidden; }
+  #statusbar{ height:38px; display:flex; align-items:center; justify-content:space-between; padding:0 26px;
+    background:#111B21; color:#cfd8dd; font-size:15px; font-weight:600; }
+  #sbIcons{ display:flex; gap:7px; align-items:center; }
+  #waHeader{ height:74px; background:#1F2A30; display:flex; align-items:center; gap:13px; padding:0 16px;
+    border-bottom:1px solid rgba(255,255,255,.06); }
+  #waAvatar{ width:46px; height:46px; border-radius:50%; background:linear-gradient(140deg,#2ee27a,#0f7a52);
+    display:flex; align-items:center; justify-content:center; flex:0 0 46px; }
+  #waName{ font-size:20.5px; font-weight:700; color:#E9EDEF; }
+  #waStatus{ font-size:14.5px; font-weight:500; color:#8696A0; margin-top:2px; display:flex; align-items:center; gap:6px; }
+  #waDot{ width:7px; height:7px; border-radius:50%; background:var(--green); }
+  #chatView{ position:absolute; top:112px; bottom:62px; left:0; right:0; overflow:hidden; background:var(--wa-bg); }
+  #chatPattern{ position:absolute; inset:0; opacity:.045;
+    background-image:radial-gradient(rgba(255,255,255,.8) 1px, transparent 1.3px); background-size:26px 26px; }
+  #chatCol{ position:absolute; left:0; right:0; top:0; padding:14px 12px 10px; }
+  .msg{ display:flex; margin-bottom:9px; }
+  .msg.in{ justify-content:flex-start; }
+  .msg.out{ justify-content:flex-end; }
+  .bubble{ position:relative; max-width:295px; padding:10px 14px 8px; border-radius:16px;
+    font-size:20px; line-height:1.34; color:#E9EDEF; font-weight:400;
+    box-shadow:0 1px 2px rgba(0,0,0,.35); }
+  .in .bubble{ background:var(--bubble-in); border-top-left-radius:5px; }
+  .out .bubble{ background:var(--bubble-out); border-top-right-radius:5px; }
+  .meta{ display:flex; justify-content:flex-end; align-items:center; gap:4px; margin-top:3px; }
+  .mtime{ font-size:12.5px; color:rgba(233,237,239,.55); font-weight:500; }
+  .sender{ font-size:14px; font-weight:700; color:var(--blue); margin-bottom:3px; }
+  .chips{ margin-top:9px; display:flex; flex-direction:column; gap:7px; }
+  .chip{ border:1.5px solid rgba(37,211,102,.55); background:rgba(37,211,102,.08); color:#7CE8A4;
+    font-size:18.5px; font-weight:600; border-radius:11px; padding:9px 12px; text-align:center; position:relative; overflow:hidden; }
+  .chip.sel{ background:rgba(37,211,102,.85); color:#04140b; border-color:transparent; }
+  .tapRing{ position:absolute; left:50%; top:50%; width:30px; height:30px; margin:-15px 0 0 -15px;
+    border:3px solid rgba(255,255,255,.9); border-radius:50%; }
+  .confirm{ display:flex; gap:11px; align-items:flex-start; }
+  .confIcon{ width:40px; height:40px; flex:0 0 40px; border-radius:50%; background:rgba(37,211,102,.16);
+    display:flex; align-items:center; justify-content:center; margin-top:2px; }
+  .confTitle{ font-size:19.5px; font-weight:700; color:#7CE8A4; }
+  .confLine{ font-size:18.5px; color:#E9EDEF; margin-top:3px; }
+  .confSub{ font-size:16.5px; color:rgba(233,237,239,.6); margin-top:2px; }
+  #inputBar{ position:absolute; bottom:0; left:0; right:0; height:62px; background:#111B21;
+    display:flex; align-items:center; gap:10px; padding:0 12px; }
+  #inputField{ flex:1; height:44px; background:#1F2C34; border-radius:22px; display:flex; align-items:center;
+    padding:0 18px; font-size:17.5px; color:#cfd8dd; overflow:hidden; white-space:nowrap; }
+  #inputPlaceholder{ color:#6b7a85; }
+  #caret{ width:2px; height:22px; background:#8fd8ae; margin-left:2px; }
+  #sendBtn{ width:44px; height:44px; border-radius:50%; background:var(--green);
+    display:flex; align-items:center; justify-content:center; flex:0 0 44px; }
+
+  /* mode chip (KI / Mitarbeiter) */
+  #modeChip{ left:0; top:0; }
+  #modeChipInner{ position:absolute; left:-108px; top:-472px; width:216px; height:58px; border-radius:999px;
+    background:rgba(16,22,28,.92); border:1.5px solid rgba(37,211,102,.55);
+    box-shadow:0 14px 40px rgba(0,0,0,.5), 0 0 26px rgba(37,211,102,.18);
+    display:flex; align-items:center; justify-content:center; gap:10px; }
+  #modeLabel{ font-size:18px; font-weight:700; letter-spacing:2px; color:#7CE8A4; }
+  #modeIconWrap{ width:34px; height:34px; border-radius:50%; background:rgba(37,211,102,.15);
+    display:flex; align-items:center; justify-content:center; }
+
+  /* ---------- annotations (scene 3) ---------- */
+  .anno{ position:absolute; display:flex; align-items:center; gap:14px; padding:16px 22px;
+    background:rgba(20,27,34,.85); border:1px solid rgba(255,255,255,.1); border-radius:16px;
+    box-shadow:0 16px 44px rgba(0,0,0,.45); }
+  .anno .aicon{ width:48px; height:48px; flex:0 0 48px; border-radius:13px; background:rgba(78,168,255,.13);
+    display:flex; align-items:center; justify-content:center; }
+  .anno .atxt{ font-size:22px; font-weight:600; color:var(--ink); white-space:nowrap; }
+  .anno .anum{ font-size:13px; font-weight:700; letter-spacing:1.6px; color:var(--ink-dim); }
+  .connector{ position:absolute; height:2px; background:linear-gradient(90deg,rgba(78,168,255,.0),rgba(78,168,255,.65)); }
+  .connector.rev{ background:linear-gradient(90deg,rgba(78,168,255,.65),rgba(78,168,255,0)); }
+  .cdot{ position:absolute; width:8px; height:8px; border-radius:50%; background:var(--blue); margin:-3px 0 0 -4px;
+    box-shadow:0 0 10px rgba(78,168,255,.8); }
+
+  /* ================= CALENDAR (scene 4) ================= */
+  #calCard{ left:1010px; top:200px; width:680px; height:660px; padding:0; overflow:hidden; }
+  #calHead{ height:76px; display:flex; align-items:center; gap:14px; padding:0 26px;
+    border-bottom:1px solid rgba(255,255,255,.08); background:rgba(255,255,255,.03); }
+  #calHeadIcon{ width:44px; height:44px; border-radius:12px; background:rgba(78,168,255,.14);
+    display:flex; align-items:center; justify-content:center; }
+  #calTitle{ font-size:22px; font-weight:700; color:var(--ink); }
+  #calSub{ font-size:15.5px; font-weight:500; color:var(--ink-dim); margin-top:2px; }
+  #calLive{ margin-left:auto; display:flex; align-items:center; gap:8px; font-size:14px; font-weight:600;
+    color:#5fe08d; background:rgba(37,211,102,.1); border:1px solid rgba(37,211,102,.35);
+    padding:7px 14px; border-radius:999px; }
+  #calDays{ display:flex; padding:14px 20px 6px 74px; gap:0; }
+  .calDay{ flex:1; text-align:center; font-size:15.5px; font-weight:600; color:var(--ink-dim); }
+  .calDay b{ display:block; font-size:19px; color:var(--ink); font-weight:700; margin-top:2px; }
+  .calDay.hl{ color:#7CE8A4; } .calDay.hl b{ color:#7CE8A4; }
+  #calGrid{ position:absolute; left:20px; right:20px; top:158px; bottom:20px; }
+  .hourRow{ position:absolute; left:0; right:0; height:1px; background:rgba(255,255,255,.07); }
+  .hourLbl{ position:absolute; left:0; font-size:13.5px; color:rgba(154,167,180,.75); font-weight:500; transform:translateY(-50%); }
+  .calCol{ position:absolute; top:0; bottom:0; }
+  .evt{ position:absolute; left:3px; right:3px; border-radius:9px; padding:7px 10px; overflow:hidden; }
+  .evt.gray{ background:rgba(255,255,255,.07); border-left:3px solid rgba(255,255,255,.25); }
+  .evt.gray .et{ font-size:13.5px; color:rgba(233,237,242,.6); font-weight:600; }
+  .evt.green{ background:linear-gradient(140deg,rgba(37,211,102,.92),rgba(18,140,94,.92));
+    border-left:3px solid #b8ffd6; box-shadow:0 10px 30px rgba(37,211,102,.35); }
+  .evt.green .et{ font-size:15px; color:#04140b; font-weight:800; }
+  .evt.green .es{ font-size:13.5px; color:rgba(4,20,11,.75); font-weight:600; margin-top:1px; }
+  #slotTarget{ position:absolute; border:2px dashed rgba(37,211,102,.6); border-radius:9px; }
+  #orb{ width:22px; height:22px; border-radius:50%; background:#7CE8A4;
+    box-shadow:0 0 24px 6px rgba(37,211,102,.75); margin:-11px 0 0 -11px; }
+  .orbTrail{ position:absolute; width:14px; height:14px; border-radius:50%; background:rgba(124,232,164,.5);
+    box-shadow:0 0 14px rgba(37,211,102,.5); margin:-7px 0 0 -7px; }
+  #flash{ position:absolute; border-radius:12px; border:3px solid rgba(184,255,214,.9); }
+
+  /* ================= SCENE 6 ================= */
+  #s6{ inset:0; }
+  .checkRow{ position:absolute; left:330px; display:flex; align-items:center; gap:24px; }
+  .checkCircle{ width:64px; height:64px; flex:0 0 64px; }
+  .checkTxt{ font-size:40px; font-weight:700; color:var(--ink); letter-spacing:-.3px; white-space:nowrap; }
+  #miniCal{ left:1150px; top:250px; width:540px; height:580px; }
+  #mcHead{ height:66px; display:flex; align-items:center; padding:0 24px; gap:12px;
+    border-bottom:1px solid rgba(255,255,255,.08); }
+  #mcTitle{ font-size:20px; font-weight:700; color:var(--ink); }
+  #mcCount{ margin-left:auto; font-size:15px; font-weight:700; color:#5fe08d;
+    background:rgba(37,211,102,.12); border:1px solid rgba(37,211,102,.4); padding:6px 14px; border-radius:999px; }
+  #mcGrid{ position:absolute; left:18px; right:18px; top:106px; bottom:18px; }
+  #mcDays{ position:absolute; left:18px; right:18px; top:76px; display:flex; }
+  .mcDay{ flex:1; text-align:center; font-size:14.5px; color:var(--ink-dim); font-weight:600; }
+  .mcRow{ position:absolute; left:0; right:0; height:1px; background:rgba(255,255,255,.06); }
+  .mcEvt{ position:absolute; border-radius:7px; }
+  .mcEvt.gray{ background:rgba(255,255,255,.08); }
+  .mcEvt.green{ background:linear-gradient(140deg,#25D366,#128C5E); box-shadow:0 8px 22px rgba(37,211,102,.35);
+    display:flex; align-items:center; justify-content:center; font-size:12px; font-weight:800; color:#04140b; }
+
+  /* ================= FINALE ================= */
+  #finale{ inset:0; }
+  #finDark{ position:absolute; inset:0; background:radial-gradient(ellipse 90% 80% at 50% 42%, rgba(6,9,13,.4), rgba(3,5,8,.96)); }
+  .finIcon{ position:absolute; top:262px; width:104px; height:104px; margin-left:-52px; border-radius:50%;
+    background:rgba(18,25,32,.95); border:2px solid rgba(255,255,255,.14);
+    display:flex; align-items:center; justify-content:center; box-shadow:0 18px 50px rgba(0,0,0,.55); }
+  .finIcon.active{ }
+  .finLbl{ position:absolute; top:384px; width:200px; margin-left:-100px; text-align:center;
+    font-size:16.5px; font-weight:600; color:var(--ink-dim); letter-spacing:1.2px; }
+  #finLineWrap{ position:absolute; left:0; top:0; }
+  #finHead{ position:absolute; left:0; right:0; top:520px; text-align:center;
+    font-size:74px; font-weight:800; color:var(--ink); letter-spacing:5px; }
+  #finSub{ position:absolute; left:0; right:0; top:632px; text-align:center;
+    font-size:43px; font-weight:700; color:var(--green); letter-spacing:.4px;
+    text-shadow:0 0 34px rgba(37,211,102,.4); }
+  #finPriceRule{ position:absolute; left:50%; top:730px; width:70px; height:2px; margin-left:-35px;
+    background:rgba(255,255,255,.22); border-radius:2px; }
+  #finPrice{ position:absolute; left:0; right:0; top:756px; text-align:center;
+    font-size:26px; font-weight:500; color:rgba(233,237,242,.82); }
+  #finDisc{ position:absolute; left:0; right:0; bottom:30px; text-align:center;
+    font-size:15px; font-weight:400; color:rgba(154,167,180,.55); }
+
+  #whiteFlash{ inset:0; background:#dff7e8; }
+  #blackout{ inset:0; background:#000; }
+</style>
+</head>
+<body>
+<div id="stage">
+
+  <!-- ======= BACKGROUND ======= -->
+  <div id="bg" class="abs">
+    <div id="blobA" class="blob"></div>
+    <div id="blobB" class="blob"></div>
+    <div id="dots" class="abs"></div>
+    <div id="vignette" class="abs"></div>
+  </div>
+
+  <!-- ======= SCENE 1 ======= -->
+  <div id="s1" class="abs">
+    <svg id="garage" class="abs" width="560" height="300" viewBox="0 0 560 300" fill="none" stroke="#ffffff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M60 210 L90 150 Q100 130 125 128 L300 122 Q330 122 352 142 L400 182 L470 192 Q495 197 495 220 L495 238 L60 238 Z"/>
+      <circle cx="150" cy="238" r="26"/><circle cx="150" cy="238" r="9"/>
+      <circle cx="400" cy="238" r="26"/><circle cx="400" cy="238" r="9"/>
+      <path d="M150 170 L280 165 M310 150 L345 180"/>
+      <path d="M30 264 L530 264"/>
+      <path d="M80 264 L80 292 M480 264 L480 292 M40 292 L520 292"/>
+      <g id="wrenchG" transform="translate(505,150)">
+        <path d="M0 0 c8 -14 26 -18 38 -9 l-14 14 4 12 12 4 14 -14 c9 12 5 30 -9 38 -10 6 -22 5 -30 -2 l-40 40 -13 -13 40 -40 c-7 -8 -8 -20 -2 -30 Z" transform="scale(.62)"/>
+      </g>
+    </svg>
+
+    <div id="callCard" class="card abs">
+      <div class="ripple abs" id="rip1"></div>
+      <div class="ripple abs" id="rip2"></div>
+      <div id="callAvatar">
+        <svg width="42" height="42" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M22 16.9v2.5a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 3.7 2 2 0 0 1 4.1 1.5h2.5a2 2 0 0 1 2 1.7c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.1L7.8 9.2a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.45c.9.34 1.84.57 2.8.7a2 2 0 0 1 1.7 2Z"/>
+        </svg>
+      </div>
+      <div id="callTitle">Eingehender Anruf</div>
+      <div id="callSub">Kunde · Mobil</div>
+      <div id="callBtns">
+        <div class="callBtn" id="btnDecline">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round"><path d="M4 4 L20 20 M20 4 L4 20" transform="scale(.75) translate(4 4)"/></svg>
+        </div>
+        <div class="callBtn" id="btnAccept">
+          <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2.1" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M22 16.9v2.5a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 3.7 2 2 0 0 1 4.1 1.5h2.5a2 2 0 0 1 2 1.7c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.1L7.8 9.2a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.45c.9.34 1.84.57 2.8.7a2 2 0 0 1 1.7 2Z"/>
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="toast" id="toast1" style="top:230px">
+      <div class="ticon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9.2 8.4 8.6 8.6 0 0 1-3.5-.9L3 20l1-5.1a8.4 8.4 0 1 1 17-3.4Z"/></svg></div>
+      <div><div class="tname">WhatsApp · Kunde A</div><div class="tmsg">Habt ihr diese Woche TÜV frei?</div></div>
+      <div class="ttime">jetzt</div>
+    </div>
+    <div class="toast" id="toast2" style="top:352px">
+      <div class="ticon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9.2 8.4 8.6 8.6 0 0 1-3.5-.9L3 20l1-5.1a8.4 8.4 0 1 1 17-3.4Z"/></svg></div>
+      <div><div class="tname">WhatsApp · Kunde B</div><div class="tmsg">Termin für HU/AU möglich?</div></div>
+      <div class="ttime">jetzt</div>
+    </div>
+    <div class="toast" id="toast3" style="top:474px">
+      <div class="ticon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9.2 8.4 8.6 8.6 0 0 1-3.5-.9L3 20l1-5.1a8.4 8.4 0 1 1 17-3.4Z"/></svg></div>
+      <div><div class="tname">WhatsApp · Kunde C</div><div class="tmsg">Können Sie mich zurückrufen?</div></div>
+      <div class="ttime">jetzt</div>
+    </div>
+
+    <div class="pill" id="pillCalls">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#ff8f93" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.9v2.5a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 3.7 2 2 0 0 1 4.1 1.5h2.5a2 2 0 0 1 2 1.7c.13.96.36 1.9.7 2.8a2 2 0 0 1-.45 2.1L7.8 9.2a16 16 0 0 0 6 6l1.1-1.1a2 2 0 0 1 2.1-.45c.9.34 1.84.57 2.8.7a2 2 0 0 1 1.7 2Z"/><path d="M15 5 L21 11 M21 5 L15 11"/></svg>
+      <span>2 verpasste Anrufe</span>
+    </div>
+    <div class="pill" id="pillMsgs">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#5fe08d" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9.2 8.4 8.6 8.6 0 0 1-3.5-.9L3 20l1-5.1a8.4 8.4 0 1 1 17-3.4Z"/></svg>
+      <span>3 neue Nachrichten</span>
+    </div>
+
+    <div id="s1Head" class="abs">
+      <div id="s1HeadA">Kunden wollen Termine.</div>
+      <div id="s1HeadB">Sofort.</div>
+    </div>
+  </div>
+
+  <!-- ======= PHONE (scenes 2–5) ======= -->
+  <div id="phoneWrap" class="abs">
+    <div id="phone">
+      <div id="statusbar">
+        <span>09:41</span>
+        <span id="sbIcons">
+          <svg width="17" height="12" viewBox="0 0 17 12" fill="#cfd8dd"><rect x="0" y="7" width="3" height="5" rx="1"/><rect x="4.5" y="5" width="3" height="7" rx="1"/><rect x="9" y="2.5" width="3" height="9.5" rx="1"/><rect x="13.5" y="0" width="3" height="12" rx="1"/></svg>
+          <svg width="16" height="12" viewBox="0 0 16 12" fill="none" stroke="#cfd8dd" stroke-width="1.6" stroke-linecap="round"><path d="M1.5 4.2a9.5 9.5 0 0 1 13 0 M3.8 6.8a6.2 6.2 0 0 1 8.4 0 M6.1 9.3a3 3 0 0 1 3.8 0"/><circle cx="8" cy="11" r="1" fill="#cfd8dd" stroke="none"/></svg>
+          <svg width="23" height="12" viewBox="0 0 23 12" fill="none"><rect x=".8" y=".8" width="18.5" height="10.4" rx="3" stroke="#cfd8dd" stroke-width="1.2"/><rect x="2.6" y="2.6" width="12" height="6.8" rx="1.6" fill="#cfd8dd"/><path d="M21 4 v4 a2 2 0 0 0 0 -4z" fill="#cfd8dd"/></svg>
+        </span>
+      </div>
+      <div id="waHeader">
+        <svg width="10" height="18" viewBox="0 0 10 18" fill="none" stroke="#8696A0" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M8.5 1.5 L1.5 9 L8.5 16.5"/></svg>
+        <div id="waAvatar">
+          <svg width="26" height="26" viewBox="0 0 100 100" fill="#fff"><path d="M87 25c9 15 5 34-9 44-11 8-25 8-36 2L22 91 9 78l20-20c-6-11-6-25 2-36C41 8 60 4 75 13L59 29l5 16 16 5z"/></svg>
+        </div>
+        <div>
+          <div id="waName">Werkstatt Müller</div>
+          <div id="waStatus"><span id="waDot"></span><span id="waStatusTxt">online</span></div>
+        </div>
+      </div>
+      <div id="chatView">
+        <div id="chatPattern"></div>
+        <div id="chatCol">
+          <div class="msg out" id="m0"><div class="bubble">Hallo, habt ihr nächste Woche einen TÜV‑Termin frei?
+            <div class="meta"><span class="mtime">09:41</span><svg class="ticks" width="17" height="11" viewBox="0 0 17 11" fill="none" stroke="#53BDEB" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6 L4.2 9.2 L10.4 1.6"/><path d="M7 6.4 L9.6 9.2 L15.9 1.6"/></svg></div></div></div>
+
+          <div class="msg in" id="m1"><div class="bubble">Natürlich! Für welches Fahrzeug benötigen Sie den Termin?
+            <div class="meta"><span class="mtime">09:41</span></div></div></div>
+
+          <div class="msg out" id="m2"><div class="bubble">BMW 3er, M‑AB 123
+            <div class="meta"><span class="mtime">09:42</span><svg class="ticks" width="17" height="11" viewBox="0 0 17 11" fill="none" stroke="#53BDEB" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6 L4.2 9.2 L10.4 1.6"/><path d="M7 6.4 L9.6 9.2 L15.9 1.6"/></svg></div></div></div>
+
+          <div class="msg in" id="m3"><div class="bubble">Gerne! Diese Termine sind aktuell frei:
+            <div class="chips">
+              <div class="chip" id="chip0">Dienstag · 09:00 Uhr</div>
+              <div class="chip" id="chip1">Dienstag · 14:30 Uhr</div>
+              <div class="chip" id="chip2">Mittwoch · 11:00 Uhr<div class="tapRing abs" id="tapRing"></div></div>
+            </div>
+            <div class="meta"><span class="mtime">09:42</span></div></div></div>
+
+          <div class="msg out" id="m4"><div class="bubble">Mittwoch 11 Uhr 👍
+            <div class="meta"><span class="mtime">09:43</span><svg class="ticks" width="17" height="11" viewBox="0 0 17 11" fill="none" stroke="#53BDEB" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6 L4.2 9.2 L10.4 1.6"/><path d="M7 6.4 L9.6 9.2 L15.9 1.6"/></svg></div></div></div>
+
+          <div class="msg in" id="m5"><div class="bubble" style="border-left:3px solid rgba(37,211,102,.75)">
+            <div class="confirm">
+              <div class="confIcon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><path d="M4 12.5 L9.5 18 L20 6.5"/></svg></div>
+              <div>
+                <div class="confTitle">Termin gebucht</div>
+                <div class="confLine">Mittwoch · 11:00 Uhr — HU/AU</div>
+                <div class="confSub">BMW 3er · M‑AB 123</div>
+              </div>
+            </div>
+            <div class="meta"><span class="mtime">09:43</span></div></div></div>
+
+          <div class="msg out" id="m6"><div class="bubble">Ich hätte noch eine spezielle Frage. Kann ich mit jemandem sprechen?
+            <div class="meta"><span class="mtime">09:44</span><svg class="ticks" width="17" height="11" viewBox="0 0 17 11" fill="none" stroke="#53BDEB" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6 L4.2 9.2 L10.4 1.6"/><path d="M7 6.4 L9.6 9.2 L15.9 1.6"/></svg></div></div></div>
+
+          <div class="msg in" id="m7"><div class="bubble">Natürlich! Ich gebe das Gespräch an einen Mitarbeiter weiter.
+            <div class="meta"><span class="mtime">09:44</span></div></div></div>
+
+          <div class="msg in" id="m8"><div class="bubble" style="border-left:3px solid rgba(78,168,255,.75)">
+            <div class="sender">Max · Werkstatt Müller</div>
+            Hallo, hier ist Max! Wie kann ich Ihnen helfen?
+            <div class="meta"><span class="mtime">09:45</span></div></div></div>
+        </div>
+      </div>
+      <div id="inputBar">
+        <div id="inputField"><span id="inputPlaceholder">Nachricht</span><span id="inputTyped"></span><span id="caret"></span></div>
+        <div id="sendBtn"><svg width="21" height="21" viewBox="0 0 24 24" fill="#062b18"><path d="M3 11.6 21 3l-8.6 18-2.2-7.2L3 11.6z"/></svg></div>
+      </div>
+    </div>
+    <!-- mode chip floats near the phone -->
+    <div id="modeChip" class="abs">
+      <div id="modeChipInner">
+        <div id="modeIconWrap">
+          <svg id="modeIconBot" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#7CE8A4" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8 V4.5 M12 4.5 a1.6 1.6 0 1 0 -.01 0"/><circle cx="9" cy="13" r="1.15" fill="#7CE8A4" stroke="none"/><circle cx="15" cy="13" r="1.15" fill="#7CE8A4" stroke="none"/><path d="M9.5 16.4 h5"/></svg>
+          <svg id="modeIconHuman" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#9CCBFF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.6"/><path d="M4.5 20.5 a7.5 7.5 0 0 1 15 0"/></svg>
+        </div>
+        <div id="modeLabel">KI‑ASSISTENT</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ======= ANNOTATIONS (scene 3) ======= -->
+  <div id="annos" class="abs">
+    <div class="anno" id="anno0" style="left:320px; top:296px;">
+      <div class="aicon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#4EA8FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9.2 8.4 8.6 8.6 0 0 1-3.5-.9L3 20l1-5.1a8.4 8.4 0 1 1 17-3.4Z"/><path d="M8 10.5 h8 M8 14 h5"/></svg></div>
+      <div><div class="anum">SCHRITT 1</div><div class="atxt">Versteht die Anfrage</div></div>
+    </div>
+    <div class="connector" id="conn0" style="left:648px; top:337px; width:105px;"></div>
+    <div class="cdot" id="cdot0" style="left:753px; top:337px;"></div>
+
+    <div class="anno" id="anno1" style="left:1258px; top:420px;">
+      <div class="aicon"><svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="#4EA8FF" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 13 6.3 8.6C6.7 7.6 7.6 7 8.7 7h6.6c1 0 2 .6 2.4 1.6L19.5 13M4.5 13h15a1.5 1.5 0 0 1 1.5 1.5V17h-2.2M4.5 13H3v4h2.2M8.9 17h6.2"/><circle cx="7" cy="17" r="1.9"/><circle cx="17" cy="17" r="1.9"/></svg></div>
+      <div><div class="anum">SCHRITT 2</div><div class="atxt">Fragt Fahrzeugdaten ab</div></div>
+    </div>
+    <div class="connector rev" id="conn1" style="left:1167px; top:461px; width:91px;"></div>
+    <div class="cdot" id="cdot1" style="left:1167px; top:461px;"></div>
+
+    <div class="anno" id="anno2" style="left:266px; top:560px;">
+      <div class="aicon"><svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="#4EA8FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="16" rx="3"/><path d="M8 3 v4 M16 3 v4 M3.5 10.5 h17 M8.6 15.6 l2.3 2.3 4.5-4.6"/></svg></div>
+      <div><div class="anum">SCHRITT 3</div><div class="atxt">Prüft echte Verfügbarkeit</div></div>
+    </div>
+    <div class="connector" id="conn2" style="left:664px; top:601px; width:89px;"></div>
+    <div class="cdot" id="cdot2" style="left:753px; top:601px;"></div>
+  </div>
+
+  <!-- ======= CALENDAR (scene 4) ======= -->
+  <div id="calCard" class="card abs">
+    <div id="calHead">
+      <div id="calHeadIcon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#4EA8FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="16" rx="3"/><path d="M8 3 v4 M16 3 v4 M3.5 10.5 h17"/></svg></div>
+      <div>
+        <div id="calTitle">Werkstatt‑Kalender</div>
+        <div id="calSub">31. August – 4. September</div>
+      </div>
+      <div id="calLive"><span style="width:8px;height:8px;border-radius:50%;background:#25D366;box-shadow:0 0 10px rgba(37,211,102,.9)"></span>Live‑Sync</div>
+    </div>
+    <div id="calDays">
+      <div class="calDay">Mo<b>31.</b></div>
+      <div class="calDay">Di<b>01.</b></div>
+      <div class="calDay hl">Mi<b>02.</b></div>
+      <div class="calDay">Do<b>03.</b></div>
+      <div class="calDay">Fr<b>04.</b></div>
+    </div>
+    <div id="calGrid"></div>
+  </div>
+  <div id="orbLayer" class="abs" style="left:0;top:0">
+    <div class="orbTrail abs" id="trail2"></div>
+    <div class="orbTrail abs" id="trail1"></div>
+    <div id="orb" class="abs"></div>
+  </div>
+  <div id="flash" class="abs"></div>
+
+  <!-- ======= SCENE 6 ======= -->
+  <div id="s6" class="abs">
+    <div class="checkRow" id="cr0" style="top:268px"></div>
+    <div class="checkRow" id="cr1" style="top:398px"></div>
+    <div class="checkRow" id="cr2" style="top:528px"></div>
+    <div class="checkRow" id="cr3" style="top:658px"></div>
+    <div id="miniCal" class="card abs">
+      <div id="mcHead">
+        <div id="calHeadIcon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#4EA8FF" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="16" rx="3"/><path d="M8 3 v4 M16 3 v4 M3.5 10.5 h17"/></svg></div>
+        <div id="mcTitle">Nächste Woche</div>
+        <div id="mcCount">+0 Termine</div>
+      </div>
+      <div id="mcDays">
+        <div class="mcDay">Mo</div><div class="mcDay">Di</div><div class="mcDay">Mi</div><div class="mcDay">Do</div><div class="mcDay">Fr</div>
+      </div>
+      <div id="mcGrid"></div>
+    </div>
+  </div>
+
+  <!-- ======= FINALE ======= -->
+  <div id="finale" class="abs">
+    <div id="finDark"></div>
+    <svg id="finLine" class="abs" style="left:0;top:0" width="1920" height="1080">
+      <path id="finPath" d="M 660 314 L 1260 314" stroke="rgba(124,232,164,.75)" stroke-width="3" fill="none" stroke-linecap="round"/>
+      <circle id="finPulse" r="7" fill="#B8FFD6"/>
+    </svg>
+    <div class="finIcon" id="fi0" style="left:660px">
+      <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#25D366" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 11.5a8.4 8.4 0 0 1-9.2 8.4 8.6 8.6 0 0 1-3.5-.9L3 20l1-5.1a8.4 8.4 0 1 1 17-3.4Z"/><path d="M8.8 9.4c.3-.8 1.5-.9 2-.2l.7 1c.2.3.2.8-.1 1.1l-.5.6c.5 1 1.3 1.8 2.3 2.3l.6-.5c.3-.3.8-.4 1.1-.1l1 .7c.7.5.6 1.7-.2 2-.6.3-1.3.4-1.9.2-2.3-.6-4.1-2.4-4.7-4.7-.2-.6-.1-1.3.2-1.9Z" fill="#25D366" stroke="none"/></svg>
+    </div>
+    <div class="finIcon" id="fi1" style="left:960px">
+      <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#7CE8A4" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="8" width="16" height="11" rx="3"/><path d="M12 8 V4.8 M12 4.8 a1.7 1.7 0 1 0 -.01 0"/><circle cx="9" cy="13" r="1.2" fill="#7CE8A4" stroke="none"/><circle cx="15" cy="13" r="1.2" fill="#7CE8A4" stroke="none"/><path d="M9.5 16.4 h5"/><path d="M1.8 12.5 h2.2 M20 12.5 h2.2" stroke-width="1.6"/></svg>
+    </div>
+    <div class="finIcon" id="fi2" style="left:1260px">
+      <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#4EA8FF" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3.5" y="5" width="17" height="16" rx="3"/><path d="M8 3 v4 M16 3 v4 M3.5 10.5 h17 M8.6 15.6 l2.3 2.3 4.5-4.6"/></svg>
+    </div>
+    <div class="finLbl" id="fl0" style="left:660px">WHATSAPP</div>
+    <div class="finLbl" id="fl1" style="left:960px">KI‑ASSISTENT</div>
+    <div class="finLbl" id="fl2" style="left:1260px">KALENDER</div>
+    <div id="finHead">DER DIGITALE TÜV‑ASSISTENT</div>
+    <div id="finSub">WhatsApp rein. Termin drin.</div>
+    <div id="finPriceRule"></div>
+    <div id="finPrice">Konzipiert für laufende Softwarekosten von 0&nbsp;€*</div>
+    <div id="finDisc">*Im geplanten Free‑Tier‑Betrieb und innerhalb der jeweiligen Anbieter‑ und WhatsApp‑Nutzungsgrenzen.</div>
+  </div>
+
+  <!-- ======= OVERLAYS ======= -->
+  <div id="brand" class="abs"><span class="dot"></span><span class="txt">DER DIGITALE TÜV‑ASSISTENT</span></div>
+  <div id="caption" class="abs"><div id="captionRule"></div><div id="captionInner"></div></div>
+  <div id="whiteFlash" class="abs"></div>
+  <div id="blackout" class="abs"></div>
+</div>
+
+<script>
+/* ============================================================
+   Deterministic timeline film.  window.FILM.seekTo(t) renders
+   the exact frame for time t (seconds).  DURATION = 58 s.
+   ============================================================ */
+const DURATION = 58;
+
+/* ---------- easings ---------- */
+const clamp=(x,a,b)=>Math.max(a,Math.min(b,x));
+const lerp=(a,b,p)=>a+(b-a)*p;
+const outCubic=p=>1-Math.pow(1-p,3);
+const inCubic=p=>p*p*p;
+const inOut=p=>p<.5?4*p*p*p:1-Math.pow(-2*p+2,3)/2;
+const outQuint=p=>1-Math.pow(1-p,5);
+const outBack=p=>{const c=1.70158,d=c+1;return 1+d*Math.pow(p-1,3)+c*Math.pow(p-1,2);};
+const outBackS=p=>{const c=2.6,d=c+1;return 1+d*Math.pow(p-1,3)+c*Math.pow(p-1,2);};
+/* progress of segment starting t0, duration d, eased */
+const seg=(t,t0,d,fn=outCubic)=>fn(clamp((t-t0)/d,0,1));
+/* 1 inside [a,b] with eased edges of width w */
+const window_=(t,a,b,w=.35)=>clamp((t-a)/w,0,1)*clamp((b-t)/w,0,1)>0?Math.min(seg(t,a,w,outCubic),seg(b,t- b + b,1,p=>1)) : 0; // unused
+const fadeWin=(t,a,b,wi=.35,wo=.35)=>{
+  if(t<a||t>b+wo) return 0;
+  const i=seg(t,a,wi,outCubic);
+  const o=1-seg(t,b,wo,inCubic);
+  return Math.min(i,o);
+};
+
+const $=id=>document.getElementById(id);
+const S=(el,styles)=>{for(const k in styles)el.style[k]=styles[k];};
+const show=(el,on)=>{el.classList.toggle('hidden',!on);};
+const px=v=>v+'px';
+
+/* ---------- timeline ---------- */
+const T={
+  s1:{end:7},
+  phoneIn:7.0,
+  m0Type:[7.9,8.95], m0:9.05,
+  c2:[10.2,13.7],
+  m1Typing:[12.5,14.05], m1:14.15,
+  anno0:14.9,
+  m2Type:[15.95,16.75], m2:16.85,
+  anno1:17.7,
+  m3Typing:[18.3,20.05], m3:20.15,
+  chips:[20.55,20.8,21.05],
+  anno2:21.0,
+  annoOut:24.3,
+  tap:25.25, m4:25.7,
+  phoneLeft:26.6,
+  calIn:27.3,
+  orb:[28.0,28.85],
+  evtLand:28.9,
+  m5Typing:[29.3,30.2], m5:30.3,
+  calOut:33.9, phoneCenter:34.0,
+  modeChipIn:34.5,
+  m6Type:[34.7,35.4], m6:35.5,
+  m7Typing:[36.5,37.4], m7:37.5,
+  modeFlip:38.8,
+  m8Typing:[39.15,39.7], m8:39.8,
+  phoneOut:41.0,
+  checks:[42.2,43.6,45.0,46.4],
+  s6End:49.55,
+  finale:50.0,
+  lineDraw:[50.35,52.05],
+  icons:[50.45,51.2,51.95],
+  head:52.4, sub:53.6, price:54.9, disc:55.5,
+  blackout:57.25
+};
+
+const CAPTIONS=[
+  {a:1.2,  b:6.15, txt:'„Telefon klingelt. Die Werkstatt ist voll. Und der nächste Kunde möchte einfach nur einen Termin.“'},
+  {a:10.2, b:13.55,txt:'„Was wäre, wenn WhatsApp das ab jetzt einfach selbst erledigt?“'},
+  {a:15.6, b:24.3, txt:'„Eine KI versteht die Anfrage, fragt alle benötigten Fahrzeugdaten ab und prüft automatisch die tatsächlich verfügbaren Termine.“'},
+  {a:28.2, b:33.45,txt:'„Der Kunde wählt seinen Termin – und die Buchung landet automatisch im Kalender.“'},
+  {a:36.6, b:40.55,txt:'„Und sobald ein Mensch gebraucht wird, übernimmt die Werkstatt.“'},
+  {a:43.2, b:49.35,txt:'„Weniger Unterbrechungen. Weniger Verwaltungsarbeit. Mehr Service für den Kunden.“'},
+];
+
+/* messages: element id + born time */
+const MSGS=[
+  {id:'m0',t:T.m0},{id:'m1',t:T.m1},{id:'m2',t:T.m2},{id:'m3',t:T.m3},
+  {id:'m4',t:T.m4},{id:'m5',t:T.m5},{id:'m6',t:T.m6},{id:'m7',t:T.m7},{id:'m8',t:T.m8},
+];
+
+/* typing status windows for the header ("tippt …") */
+const TYPING=[T.m1Typing,T.m3Typing,T.m5Typing,T.m7Typing,T.m8Typing];
+
+/* input field typing: [start,end,text] — customer writes, then sends */
+const INPUTS=[
+  [T.m0Type[0],T.m0Type[1],'Hallo, habt ihr nächste Woche einen TÜV-Termin frei?'],
+  [T.m2Type[0],T.m2Type[1],'BMW 3er, M-AB 123'],
+  [T.m6Type[0],T.m6Type[1],'Kann ich mit jemandem sprechen?'],
+];
+
+/* ---------- build calendar grid (scene 4) ---------- */
+const calGrid=$('calGrid');
+(function(){
+  const hours=[8,9,10,11,12,13,14,15,16];
+  const H=482; const rowH=H/(hours.length-1);
+  hours.forEach((h,i)=>{
+    const y=i*rowH;
+    const r=document.createElement('div'); r.className='hourRow'; r.style.top=px(y); r.style.left='54px'; calGrid.appendChild(r);
+    const l=document.createElement('div'); l.className='hourLbl'; l.style.top=px(y);
+    l.textContent=(h<10?'0'+h:h)+':00'; calGrid.appendChild(l);
+  });
+  window.__cal={x0:54, colW:(640-54-6)/5, rowH, hours};
+})();
+function calPos(day,hour,durH){ // day 0..4
+  const c=window.__cal;
+  return {left:c.x0+day*c.colW, top:(hour-8)*c.rowH, width:c.colW, height:durH*c.rowH};
+}
+function addCalEvt(id,day,hour,durH,cls,html){
+  const e=document.createElement('div'); e.className='evt '+cls; e.id=id;
+  const p=calPos(day,hour,durH);
+  S(e,{left:px(p.left),top:px(p.top+2),width:px(p.width),height:px(p.height-5)});
+  e.innerHTML=html; calGrid.appendChild(e); return e;
+}
+addCalEvt('ce0',0,9,1.5,'gray','<div class="et">Inspektion</div>');
+addCalEvt('ce1',1,13,2,'gray','<div class="et">Reifenservice</div>');
+addCalEvt('ce2',3,10,1.5,'gray','<div class="et">Bremsen</div>');
+addCalEvt('ce3',4,14,1.5,'gray','<div class="et">Inspektion</div>');
+const evtNew=addCalEvt('ceNew',2,11,2,'green','<div class="et">11:00 · HU/AU</div><div class="es">BMW 3er · M‑AB 123</div>');
+const slotP=calPos(2,11,2);
+const slotTarget=document.createElement('div'); slotTarget.id='slotTarget';
+S(slotTarget,{left:px(slotP.left),top:px(slotP.top+2),width:px(slotP.width),height:px(slotP.height-5)});
+calGrid.appendChild(slotTarget);
+
+/* ---------- build check rows (scene 6) ---------- */
+const CHECK_TXT=['24/7 Terminannahme','Weniger Telefonate','Automatische Kalenderbuchung','KI + menschlicher Service'];
+CHECK_TXT.forEach((txt,i)=>{
+  const row=$('cr'+i);
+  row.innerHTML=`
+    <svg class="checkCircle" viewBox="0 0 64 64">
+      <circle class="ccirc" cx="32" cy="32" r="28" fill="rgba(37,211,102,.08)" stroke="rgba(37,211,102,.9)" stroke-width="3.5"
+        stroke-dasharray="176" stroke-dashoffset="176" transform="rotate(-90 32 32)" stroke-linecap="round"/>
+      <path class="cmark" d="M20 33.5 L28.5 42 L45 24" fill="none" stroke="#25D366" stroke-width="5"
+        stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="36" stroke-dashoffset="36"/>
+    </svg>
+    <div class="checkTxt">${txt}</div>`;
+});
+
+/* ---------- build mini calendar (scene 6) ---------- */
+const mcGrid=$('mcGrid');
+(function(){
+  const rows=9, H=456, rowH=H/rows;
+  for(let i=0;i<=rows;i++){
+    const r=document.createElement('div'); r.className='mcRow'; r.style.top=px(i*rowH); mcGrid.appendChild(r);
+  }
+  window.__mc={colW:(540-36)/5, rowH};
+})();
+const MC_PRE=[[0,1,1.6],[2,4,1.4],[4,0.5,1.2]];
+MC_PRE.forEach((e,i)=>{
+  const c=window.__mc; const el=document.createElement('div'); el.className='mcEvt gray';
+  S(el,{left:px(e[0]*c.colW+3),top:px(e[1]*c.rowH+2),width:px(c.colW-6),height:px(e[2]*c.rowH-4)});
+  mcGrid.appendChild(el);
+});
+const MC_NEW=[[1,2.6,1.4],[3,1.2,1.4],[0,4.6,1.2],[2,6.2,1.4],[4,3.4,1.2],[1,6.8,1.4],[3,5.2,1.2],[2,0.4,1.2]];
+const mcNewEls=MC_NEW.map((e,i)=>{
+  const c=window.__mc; const el=document.createElement('div'); el.className='mcEvt green'; el.textContent='HU/AU';
+  S(el,{left:px(e[0]*c.colW+3),top:px(e[1]*c.rowH+2),width:px(c.colW-6),height:px(e[2]*c.rowH-4)});
+  mcGrid.appendChild(el); return el;
+});
+const MC_TIMES=[42.4,43.15,43.9,44.65,45.4,46.15,46.9,47.65];
+
+/* ---------- measure chat layout ---------- */
+let chatMeta=null;
+function measureChat(){
+  const view=$('chatView');
+  const vh=view.getBoundingClientRect().height;
+  const col=$('chatCol');
+  const items=MSGS.map(m=>{
+    const el=$(m.id);
+    return {el, t:m.t, bottom: el.offsetTop + el.offsetHeight};
+  });
+  chatMeta={vh, items, colH: col.offsetHeight};
+}
+
+/* deterministic smooth scroll: piecewise eased between born events */
+function chatScroll(t){
+  if(!chatMeta) return 0;
+  const pad=10;
+  let val=0;
+  for(const it of chatMeta.items){
+    if(t<it.t) break;
+    const target=Math.max(0, it.bottom+pad-chatMeta.vh);
+    const p=seg(t,it.t,.5,outCubic);
+    val=lerp(val,target,p);
+  }
+  return val;
+}
+
+/* ---------- finale path ---------- */
+const finPath=$('finPath');
+const finPathLen=finPath.getTotalLength();
+
+/* ============================================================
+   SEEK
+   ============================================================ */
+function seekTo(t){
+  t=clamp(t,0,DURATION);
+
+  /* ----- background ----- */
+  const bA=$('blobA'), bB=$('blobB');
+  S(bA,{left:px(-320+90*Math.sin(t*.11)), top:px(-420+70*Math.cos(t*.09))});
+  S(bB,{left:px(1050+80*Math.cos(t*.1)), top:px(380+90*Math.sin(t*.08))});
+  const finaleDim=seg(t,T.finale,.9,outCubic);
+  bA.style.opacity=1-finaleDim*.55; bB.style.opacity=1-finaleDim*.55;
+
+  /* ----- captions ----- */
+  let capTxt='',capOp=0;
+  for(const c of CAPTIONS){
+    const o=fadeWin(t,c.a,c.b,.4,.4);
+    if(o>0){capTxt=c.txt;capOp=o;break;}
+  }
+  const cap=$('caption');
+  show(cap,capOp>0);
+  if(capOp>0){
+    $('captionInner').textContent=capTxt;
+    cap.style.opacity=capOp;
+    cap.style.transform=`translateY(${(1-capOp)*14}px)`;
+  }
+
+  /* ----- brand badge ----- */
+  const brandOp=fadeWin(t,7.6,T.s6End,.6,.5);
+  const brand=$('brand'); show(brand,brandOp>0); brand.style.opacity=brandOp*.9;
+
+  /* ================= SCENE 1 ================= */
+  const s1=$('s1');
+  const s1on=t<T.s1.end+.1;
+  show(s1,s1on);
+  if(s1on){
+    const out=1-seg(t,6.45,.55,inOut);
+    s1.style.opacity=out;
+    s1.style.transform=`scale(${lerp(.985,1,out)})`;
+
+    /* call card: pop in + ring shake */
+    const cc=$('callCard');
+    const ci=seg(t,.25,.6,outBackS);
+    const ringing=(t>.5&&t<1.7)||(t>2.9&&t<4.1);
+    const shake=ringing?Math.sin(t*46)*1.3:0;
+    S(cc,{opacity:Math.min(1,ci*1.4), transform:`translateY(${(1-ci)*46}px) scale(${lerp(.9,1,ci)}) rotate(${shake}deg)`});
+    /* ripples */
+    [['rip1',0],['rip2',.5]].forEach(([id,off])=>{
+      const el=$(id);
+      const ph=((t-off)%1.6)/1.6;
+      const on=t>.5&&t<6.2;
+      show(el,on);
+      if(on){el.style.transform=`scale(${lerp(.7,2.1,ph)})`; el.style.opacity=(1-ph)*.65;}
+    });
+    /* accept button pulse */
+    $('btnAccept').style.transform=`scale(${1+.07*Math.sin(t*7)})`;
+
+    /* toasts slide in */
+    [[1.15,'toast1'],[1.95,'toast2'],[2.75,'toast3']].forEach(([tt,id])=>{
+      const p=seg(t,tt,.55,outBackS);
+      const el=$(id);
+      S(el,{opacity:Math.min(1,p*1.5), transform:`translateX(${(1-p)*140}px) scale(${lerp(.94,1,p)})`});
+    });
+    /* pills */
+    const p1=seg(t,3.15,.5,outBackS);
+    S($('pillCalls'),{opacity:Math.min(1,p1*1.4),transform:`translateX(${(p1-1)*90}px)`});
+    const p2=seg(t,2.45,.5,outBackS);
+    S($('pillMsgs'),{opacity:Math.min(1,p2*1.4),transform:`translateX(${(p2-1)*90}px)`});
+
+    /* headline */
+    const hA=seg(t,3.85,.55,outCubic);
+    S($('s1HeadA'),{opacity:hA,transform:`translateY(${(1-hA)*30}px)`});
+    const hB=seg(t,4.85,.45,outBackS);
+    S($('s1HeadB'),{opacity:Math.min(1,hB*1.5),transform:`translateY(${(1-hB)*24}px) scale(${lerp(.7,1,hB)})`});
+
+    /* garage art + wrench wiggle */
+    const g=$('garage');
+    g.style.opacity=.16*seg(t,.8,1,outCubic)*out;
+    const wr=document.getElementById('wrenchG');
+    wr.setAttribute('transform',`translate(505,150) rotate(${10*Math.sin(t*2.2)})`);
+  }
+
+  /* ================= PHONE (scenes 2–5) ================= */
+  const pw=$('phoneWrap');
+  const phoneOn=t>=T.phoneIn-.05&&t<=T.phoneOut+.85;
+  show(pw,phoneOn);
+  if(phoneOn){
+    const pin=seg(t,T.phoneIn,.95,outQuint);
+    const pleft=seg(t,T.phoneLeft,.9,inOut);
+    const pcenter=seg(t,T.phoneCenter,.9,inOut);
+    const pout=seg(t,T.phoneOut,.7,inCubic);
+    const x=960 + (pleft-pcenter>0? -(pleft-pcenter)*320 : 0) - (pleft>0&&pcenter>=1?0:0);
+    /* x: center 960 -> left 640 during scene4, back to 960 */
+    const xoff=-320*clamp(pleft-pcenter,0,1);
+    const y=540 + (1-pin)*560 + pout*90;
+    const sc=lerp(.9,1,pin)*(1-pout*.12);
+    const op=Math.min(1,pin*1.3)*(1-pout);
+    S(pw,{left:px(960+xoff), top:px(y), opacity:op});
+    $('phone').style.transform=`scale(${sc})`;
+    $('phone').style.transformOrigin='center';
+
+    /* header status text */
+    let status='online';
+    for(const w of TYPING){ if(t>=w[0]&&t<=w[1]){status='tippt …';break;} }
+    const human=t>=T.modeFlip;
+    $('waStatusTxt').textContent = human ? (status==='tippt …'?'Max tippt …':'Max · online') : (status==='tippt …'?'tippt …':'KI‑Assistent · online');
+    $('waDot').style.background = human ? '#4EA8FF' : '#25D366';
+
+    /* chat scroll + message pops */
+    if(chatMeta){
+      $('chatCol').style.transform=`translateY(${-chatScroll(t)}px)`;
+      for(const it of chatMeta.items){
+        const p=seg(t,it.t,.42,outBackS);
+        const born=t>=it.t;
+        it.el.style.opacity=born?Math.min(1,p*1.6):0;
+        const dir=it.el.classList.contains('out')?1:-1;
+        it.el.style.transform=born?`translate(${(1-p)*22*dir}px,${(1-p)*16}px) scale(${lerp(.82,1,p)})`:'none';
+      }
+    }
+
+    /* chips pop */
+    T.chips.forEach((ct,i)=>{
+      const el=$('chip'+i);
+      const p=seg(t,ct,.4,outBackS);
+      el.style.opacity=Math.min(1,p*1.6);
+      el.style.transform=`scale(${lerp(.75,1,p)})`;
+    });
+    /* chip tap: ring + select */
+    const tapP=seg(t,T.tap,.45,outCubic);
+    const ring=$('tapRing');
+    show(ring,t>=T.tap&&t<=T.tap+.5);
+    if(t>=T.tap&&t<=T.tap+.5){ring.style.transform=`scale(${lerp(.4,3.4,tapP)})`;ring.style.opacity=1-tapP;}
+    const chip2=$('chip2');
+    chip2.classList.toggle('sel',t>=T.tap+.12);
+    if(t>=T.tap&&t<T.tap+.24) chip2.style.transform=`scale(${1-.06*Math.sin(((t-T.tap)/.24)*Math.PI)})`;
+
+    /* input field typing */
+    const typed=$('inputTyped'), placeholder=$('inputPlaceholder'), caret=$('caret'), send=$('sendBtn');
+    let txt='',caretOn=false,sendPulse=0;
+    for(const [a,b,s] of INPUTS){
+      if(t>=a&&t<b+.14){
+        const p=clamp((t-a)/(b-a),0,1);
+        txt=s.slice(0,Math.round(p*s.length));
+        caretOn=true;
+        if(t>b-.02) sendPulse=1-seg(t,b,.3,outCubic);
+      }
+    }
+    typed.textContent=txt;
+    show(placeholder,txt.length===0);
+    show(caret,caretOn&&Math.floor(t*2.6)%2===0);
+    send.style.transform=`scale(${1+sendPulse*.25})`;
+
+    /* mode chip */
+    const mc=$('modeChip'), mci=$('modeChipInner');
+    const mcOn=t>=T.modeChipIn&&t<=T.phoneOut+.5;
+    show(mc,mcOn);
+    if(mcOn){
+      const mIn=seg(t,T.modeChipIn,.6,outBackS);
+      const flip=seg(t,T.modeFlip,.55,inOut);
+      const human2=flip>.5;
+      $('modeLabel').textContent=human2?'MITARBEITER':'KI‑ASSISTENT';
+      $('modeLabel').style.color=human2?'#9CCBFF':'#7CE8A4';
+      show($('modeIconBot'),!human2); show($('modeIconHuman'),human2);
+      $('modeIconWrap').style.background=human2?'rgba(78,168,255,.16)':'rgba(37,211,102,.15)';
+      mci.style.borderColor=human2?'rgba(78,168,255,.65)':'rgba(37,211,102,.55)';
+      mci.style.boxShadow=human2?'0 14px 40px rgba(0,0,0,.5), 0 0 26px rgba(78,168,255,.22)':'0 14px 40px rgba(0,0,0,.5), 0 0 26px rgba(37,211,102,.18)';
+      const squash=flip>0&&flip<1?1-.14*Math.sin(flip*Math.PI):1;
+      const rotY=flip>0&&flip<1?(flip<.5?flip*2*90:(1-flip)*2*-90):0;
+      mci.style.opacity=Math.min(1,mIn*1.5)*(1-pout);
+      mci.style.transform=`translateY(${(1-mIn)*22}px) scaleY(${squash}) rotateX(${rotY}deg)`;
+    }
+  }
+
+  /* ================= ANNOTATIONS ================= */
+  const annos=$('annos');
+  const annosOn=t>=T.anno0-.1&&t<=T.annoOut+.7;
+  show(annos,annosOn);
+  if(annosOn){
+    const outp=1-seg(t,T.annoOut,.55,inOut);
+    [[T.anno0,'anno0','conn0','cdot0',1],[T.anno1,'anno1','conn1','cdot1',-1],[T.anno2,'anno2','conn2','cdot2',1]].forEach(([tt,aid,cid,did,dir])=>{
+      const p=seg(t,tt,.6,outBackS);
+      const a=$(aid);
+      S(a,{opacity:Math.min(1,p*1.5)*outp,transform:`translateX(${(1-p)*34*-dir}px) scale(${lerp(.92,1,p)})`});
+      const c=$(cid);
+      const cw=parseFloat(c.dataset.w||(c.dataset.w=c.style.width));
+      const cp=seg(t,tt+.18,.4,outCubic);
+      c.style.opacity=outp;
+      if(dir>0){ c.style.width=px(cw*cp); }
+      else { c.style.width=px(cw*cp); }
+      const d=$(did);
+      d.style.opacity=cp*outp;
+      d.style.transform=`scale(${1+.35*Math.sin(t*5+tt)})`;
+    });
+  }
+
+  /* ================= CALENDAR ================= */
+  const cal=$('calCard');
+  const calOn=t>=T.calIn-.05&&t<=T.calOut+.75;
+  show(cal,calOn);
+  if(calOn){
+    const cin=seg(t,T.calIn,.85,outQuint);
+    const cout=seg(t,T.calOut,.65,inCubic);
+    S(cal,{opacity:Math.min(1,cin*1.3)*(1-cout),
+      transform:`translateX(${(1-cin)*430+cout*430}px) scale(${lerp(.96,1,cin)})`});
+    /* target slot pulse until event lands */
+    const st=slotTarget;
+    const landed=t>=T.evtLand;
+    show(st,!landed&&t>=T.calIn+.4);
+    if(!landed) st.style.opacity=.4+.35*Math.sin(t*6);
+    /* new event lands */
+    show(evtNew,landed);
+    if(landed){
+      const lp=seg(t,T.evtLand,.55,outBackS);
+      evtNew.style.opacity=Math.min(1,lp*1.6);
+      evtNew.style.transform=`translateY(${(1-lp)*-46}px) scale(${lerp(.8,1,lp)})`;
+    }
+  }
+  /* flash on landing */
+  const fl=$('flash');
+  const flOn=t>=T.evtLand&&t<=T.evtLand+.6;
+  show(fl,flOn);
+  if(flOn){
+    const fp=seg(t,T.evtLand,.6,outCubic);
+    const cw=window.__cal;
+    S(fl,{left:px(1010+20+slotP.left-6),top:px(200+158+slotP.top-4),width:px(slotP.width+12),height:px(slotP.height+8),
+      opacity:(1-fp)*.9,transform:`scale(${lerp(1,1.25,fp)})`});
+  }
+
+  /* orb flight */
+  const orbLayer=$('orbLayer');
+  const orbOn=t>=T.orb[0]&&t<=T.orb[1]+.15;
+  show(orbLayer,orbOn);
+  if(orbOn){
+    const op=seg(t,T.orb[0],T.orb[1]-T.orb[0],inOut);
+    const P0={x:790,y:640},P1={x:980,y:330},P2={x:1010+20+slotP.left+slotP.width/2,y:200+158+slotP.top+20};
+    const bez=p=>({x:(1-p)*(1-p)*P0.x+2*(1-p)*p*P1.x+p*p*P2.x, y:(1-p)*(1-p)*P0.y+2*(1-p)*p*P1.y+p*p*P2.y});
+    const pos=bez(op);
+    S($('orb'),{left:px(pos.x),top:px(pos.y),opacity:Math.min(1,op*4)*(op>.97?0:1)});
+    const t1=bez(Math.max(0,op-.07)),t2=bez(Math.max(0,op-.14));
+    S($('trail1'),{left:px(t1.x),top:px(t1.y),opacity:.5*Math.min(1,op*4)*(op>.95?0:1)});
+    S($('trail2'),{left:px(t2.x),top:px(t2.y),opacity:.3*Math.min(1,op*4)*(op>.93?0:1)});
+  }
+
+  /* ================= SCENE 6 ================= */
+  const s6=$('s6');
+  const s6on=t>=41.2&&t<=T.s6End+.7;
+  show(s6,s6on);
+  if(s6on){
+    const outp=1-seg(t,T.s6End,.55,inOut);
+    s6.style.opacity=outp;
+    T.checks.forEach((ct,i)=>{
+      const row=$('cr'+i);
+      const p=seg(t,ct,.55,outCubic);
+      const pb=seg(t,ct,.5,outBackS);
+      S(row,{opacity:Math.min(1,p*1.5),transform:`translateX(${(1-outCubic(p))*-46}px)`});
+      const circ=row.querySelector('.ccirc');
+      circ.style.strokeDashoffset=176*(1-p);
+      const mark=row.querySelector('.cmark');
+      const mp=seg(t,ct+.22,.4,outCubic);
+      mark.style.strokeDashoffset=36*(1-mp);
+      row.querySelector('.checkCircle').style.transform=`scale(${lerp(.7,1,pb)})`;
+    });
+    /* mini calendar */
+    const mIn=seg(t,41.5,.8,outQuint);
+    S($('miniCal'),{opacity:Math.min(1,mIn*1.3),transform:`translateX(${(1-mIn)*300}px)`});
+    let cnt=0;
+    mcNewEls.forEach((el,i)=>{
+      const p=seg(t,MC_TIMES[i],.45,outBackS);
+      el.style.opacity=Math.min(1,p*1.6);
+      el.style.transform=`scale(${lerp(.6,1,p)})`;
+      if(t>=MC_TIMES[i])cnt++;
+    });
+    $('mcCount').textContent='+'+cnt+' Termine';
+  }
+
+  /* ================= FINALE ================= */
+  const fin=$('finale');
+  const finOn=t>=T.finale-.3;
+  show(fin,finOn);
+  if(finOn){
+    const fIn=seg(t,T.finale-.25,.9,outCubic);
+    fin.style.opacity=fIn;
+    $('finDark').style.opacity=fIn;
+    /* line draw */
+    const lp=seg(t,T.lineDraw[0],T.lineDraw[1]-T.lineDraw[0],inOut);
+    finPath.style.strokeDasharray=finPathLen;
+    finPath.style.strokeDashoffset=finPathLen*(1-lp);
+    const pulse=$('finPulse');
+    if(lp>0&&lp<1){
+      const pt=finPath.getPointAtLength(finPathLen*lp);
+      pulse.setAttribute('cx',pt.x);pulse.setAttribute('cy',pt.y);
+      pulse.style.opacity=1;
+    } else pulse.style.opacity=0;
+    /* icons pop */
+    T.icons.forEach((it,i)=>{
+      const p=seg(t,it,.5,outBackS);
+      const el=$('fi'+i), lb=$('fl'+i);
+      S(el,{opacity:Math.min(1,p*1.6),transform:`scale(${lerp(.5,1,p)})`});
+      const glow=['rgba(37,211,102,.35)','rgba(124,232,164,.3)','rgba(78,168,255,.35)'][i];
+      el.style.boxShadow=p>0?`0 18px 50px rgba(0,0,0,.55), 0 0 ${34*p}px ${glow}`:'';
+      const lo=seg(t,it+.2,.5,outCubic);
+      S(lb,{opacity:lo*.85,transform:`translateY(${(1-lo)*10}px)`});
+    });
+    /* headline */
+    const hp=seg(t,T.head,.8,outQuint);
+    S($('finHead'),{opacity:hp,transform:`translateY(${(1-hp)*34}px)`,letterSpacing:px(lerp(14,5,hp))});
+    const sp=seg(t,T.sub,.7,outQuint);
+    S($('finSub'),{opacity:sp,transform:`translateY(${(1-sp)*26}px)`});
+    const pp=seg(t,T.price,.6,outCubic);
+    S($('finPrice'),{opacity:pp*.95,transform:`translateY(${(1-pp)*16}px)`});
+    $('finPriceRule').style.opacity=pp;
+    const dp=seg(t,T.disc,.6,outCubic);
+    $('finDisc').style.opacity=dp*.8;
+  }
+
+  /* white flash at finale impact */
+  const wf=$('whiteFlash');
+  const wfOn=t>=T.finale&&t<=T.finale+.5;
+  show(wf,wfOn);
+  if(wfOn) wf.style.opacity=(1-seg(t,T.finale,.5,outCubic))*.16;
+
+  /* blackout */
+  const bo=$('blackout');
+  const boOp=seg(t,T.blackout,DURATION-T.blackout-.05,inOut);
+  show(bo,boOp>0);
+  bo.style.opacity=boOp;
+}
+
+/* ============================================================
+   boot
+   ============================================================ */
+let ready=false;
+const readyPromise=(async()=>{
+  if(document.fonts&&document.fonts.ready){try{await document.fonts.ready;}catch(e){}}
+  await new Promise(r=>requestAnimationFrame(()=>requestAnimationFrame(r)));
+  measureChat();
+  seekTo(0);
+  ready=true;
+})();
+
+window.FILM={ DURATION, seekTo, readyPromise, isReady:()=>ready };
+
+/* live preview when opened in a browser (not used by the renderer) */
+if(!location.search.includes('render')){
+  readyPromise.then(()=>{
+    let start=performance.now(), paused=false, pauseT=0;
+    const loop=now=>{
+      if(!paused){
+        const t=((now-start)/1000)%DURATION;
+        seekTo(t);
+      }
+      requestAnimationFrame(loop);
+    };
+    addEventListener('keydown',e=>{
+      if(e.key===' '){paused=!paused; if(!paused)start=performance.now()-pauseT*1000; e.preventDefault();}
+      if(e.key==='ArrowRight'){start-=1000;}
+      if(e.key==='ArrowLeft'){start+=1000;}
+    });
+    requestAnimationFrame(loop);
+  });
+}
+</script>
+</body>
+</html>
