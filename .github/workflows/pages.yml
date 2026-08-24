@@ -1,10 +1,13 @@
 name: Seite auf GitHub Pages veroeffentlichen
 
 # Laeuft automatisch bei jedem Push auf main und kann jederzeit von Hand
-# gestartet werden. Solange GitHub Pages fuer dieses private Repository nicht
-# freigeschaltet ist, bricht der Schritt "Pages einrichten" ab - sobald Pages
-# verfuegbar ist (GitHub Pro oder oeffentliches Repository), veroeffentlicht
-# der Workflow die index.html ohne weitere Aenderung.
+# gestartet werden.
+#
+# Voraussetzung, einmalig von Hand: unter Settings -> Pages muss als Quelle
+# "GitHub Actions" eingestellt sein. Das Einschalten selbst kann kein Workflow
+# uebernehmen - POST /repos/{owner}/{repo}/pages verlangt laut GitHub-Doku
+# "Pages: write" UND "Administration: write", und das GITHUB_TOKEN eines
+# Workflows erhaelt "Administration: write" nie.
 
 on:
   push:
@@ -31,8 +34,6 @@ jobs:
 
       - name: Pages einrichten
         uses: actions/configure-pages@v5
-        with:
-          enablement: true
 
       - name: Seite als Artefakt packen
         uses: actions/upload-pages-artifact@v3
