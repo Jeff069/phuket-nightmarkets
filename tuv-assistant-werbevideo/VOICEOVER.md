@@ -1,10 +1,11 @@
 # Voiceover
 
-Das Video enthält bereits ein deutsches Voiceover: lokal synthetisiert mit dem
-Coqui-VITS-Modell **`vits-coqui-de-css10`** (via sherpa-onnx) — eine helle, weiche,
-sehr gleichmäßig fließende Stimme — anschließend veredelt mit einer Studio-Kette
-(Hochpass, Entmulmung bei 350 Hz, Präsenz bei 3 kHz, Höhen-Shelf, Kompressor,
-Limiter). Gemischt mit automatischem Ducking (Musik senkt sich unter der Stimme ab).
+Das Video läuft aktuell **ohne Voiceover** — die Untertitel tragen den Text, die
+Musik steht im Vordergrund. Die fertig produzierten Sprachdateien (Coqui-VITS
+`vits-coqui-de-css10` via sherpa-onnx, mit Studio-Politur) liegen weiterhin als
+`audio/vo/vo1.wav` … `vo7.wav` bereit. Zum Wieder-Einschalten in
+`audio/make_audio.mjs` den Schalter `USE_VO` auf `true` setzen und Tonspur +
+Video neu bauen — Platzierung und Ducking passieren dann automatisch.
 
 ## Timecodes
 

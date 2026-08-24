@@ -342,10 +342,11 @@ function readWavMono(file) {
   return { sr: fmt.sr, mono };
 }
 
-const VO = [
+const USE_VO = false;   // Video läuft ohne Sprecher — Untertitel tragen den Text
+const VO = USE_VO ? [
   ['vo1.wav', 1.0], ['vo2.wav', 10.2], ['vo3.wav', 15.6], ['vo4.wav', 28.4],
   ['vo5.wav', 36.8], ['vo6.wav', 43.4], ['vo7.wav', 52.5],
-];
+] : [];
 const duckWins = [];
 for (const [file, t0] of VO) {
   const fp = path.join(dir, 'vo', file);
@@ -386,8 +387,8 @@ function duckGain(t) {
 for (let i = 0; i < N; i++) {
   const t = i / SR;
   const dg = duckGain(t);
-  const sl = ML[i] * 0.85 * dg + FL[i] * 0.9 + VL[i];
-  const sr2 = MR[i] * 0.85 * dg + FR[i] * 0.9 + VR[i];
+  const sl = ML[i] * 1.12 * dg + FL[i] * 0.85 + VL[i];
+  const sr2 = MR[i] * 1.12 * dg + FR[i] * 0.85 + VR[i];
   let fade = 1;
   if (t > 56.9) fade = Math.max(0, 1 - (t - 56.9) / 1.0);
   if (t < 0.05) fade *= t / 0.05;

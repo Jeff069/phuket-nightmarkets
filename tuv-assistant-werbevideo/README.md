@@ -19,10 +19,10 @@ abfotografiert und mit einer programmatisch synthetisierten Tonspur gemischt wir
 | 0:41–0:50 | **Das Ergebnis** — 4 Check-Punkte, Kalender füllt sich von allein |
 | 0:50–0:58 | **Finale** — WhatsApp → KI → Kalender, Claim „WhatsApp rein. Termin drin.“ + 0-€-Hinweis mit Disclaimer |
 
-Das Video hat ein deutsches Voiceover (lokal synthetisiert mit Piper TTS, Stimme
-„Thorsten“) — alle Sprechertexte laufen zusätzlich als Untertitel mit, das Video
-funktioniert also auch stumm (Social-Media-Autoplay). Details und Timecodes in
-[`VOICEOVER.md`](VOICEOVER.md); dort steht auch, wie man eine eigene Sprecher-Aufnahme einmischt.
+Das Video läuft ohne Sprecher: Die Sprechertexte stehen als große Untertitel im
+Bild, die Musik trägt den Spot. Fertige Voiceover-Dateien liegen trotzdem im Repo
+und lassen sich per Schalter (`USE_VO` in `audio/make_audio.mjs`) wieder
+zuschalten — Details in [`VOICEOVER.md`](VOICEOVER.md).
 
 ## Neu rendern
 
@@ -59,7 +59,7 @@ node render/render.mjs --snap 3.5,29.4,53.9   # → out/frames-qa/*.png
   JPEG-Screenshot und pipet ihn direkt in ffmpeg (libx264, CRF 19, `+faststart`).
 - **`audio/make_audio.mjs`** — synthesizert die komplette Tonspur in Node (ohne
   Samples): origineller 80s-Soul/Funk-Groove bei 106 BPM (Am9↔D9-Vamp, Fmaj7/G6-Bridge): swingende Drums, funky Bassriff, Rhodes-Stabs, Snaps —
-  dazu ein deutsches Voiceover (Coqui-VITS „CSS10", lokal via sherpa-onnx, mit Studio-Politur und automatischem Ducking) und szenengenaue Sound-Effekte (Klingeln, WhatsApp-Blips, Whooshes, Buchungs-Chime,
+  dazu szenengenaue Sound-Effekte (Klingeln, WhatsApp-Blips, Whooshes, Buchungs-Chime,
   Check-Pops, Finale-Impact) — sample-genau auf die Film-Timeline gesetzt.
 
 ## Anpassen
